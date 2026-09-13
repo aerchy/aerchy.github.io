@@ -47,20 +47,20 @@ refactor: true
   {% endfor %}
 {% endif %}
 
-<!-- ===== Terminal Noir home header ===== -->
-<div id="ops-header">
-  <div class="ops-line">
-    <span class="ops-prompt">root@archy</span><span class="ops-sep">:</span><span class="ops-path">~/writeups</span><span class="ops-sep">$</span>
-    <span class="ops-cmd">ls -la --sort=recent</span>
+<!-- ===== Magazine masthead ===== -->
+<header id="mag-masthead">
+  <div class="mast-line">
+    <span class="mast-tag">// archy.sec</span>
+    <span class="mast-rule"></span>
+    <span class="mast-count">{{ site.posts | size }} writeups indexed</span>
   </div>
-  <div class="ops-stats">
-    <span class="ops-stat"><b>{{ site.posts | size }}</b> writeups</span>
-    <span class="ops-stat"><b>{{ site.categories | size }}</b> categories</span>
-    <span class="ops-stat"><b>{{ site.tags | size }}</b> tags</span>
-  </div>
-</div>
+  <h1 class="mast-title">Security Writeups</h1>
+  <p class="mast-sub">Hack The Box · Active Directory · CVE exploitation</p>
+</header>
 
-<div id="post-list" class="flex-grow-1 px-xl-1">
+{% assign feature = posts | first %}
+
+<div id="mag-grid" class="flex-grow-1">
   {% for post in posts %}
     <!-- derive machine metadata from the title -->
     {% assign machine_name = post.title | remove: 'HTB - ' | split: ' (' | first %}
@@ -79,52 +79,72 @@ refactor: true
     {% assign idx = forloop.index %}
     {% if idx < 10 %}{% assign idx = idx | prepend: '0' %}{% endif %}
 
-    <article class="card-wrapper card machine-card diff-{{ diff | downcase | default: 'none' }}">
-      <a href="{{ post.url | relative_url }}" class="post-preview machine-link">
-        {% if post.image %}
-          {% assign src = post.image.path | default: post.image %}
-          {% if post.media_subpath %}
-            {% unless src contains '://' %}
-              {% assign src = post.media_subpath | append: '/' | append: src | replace: '///', '/' | replace: '//', '/' %}
-            {% endunless %}
+    <!-- resolve image src -->
+    {% assign src = '' %}
+    {% if post.image %}
+      {% assign src = post.image.path | default: post.image %}
+      {% if post.media_subpath %}
+        {% unless src contains '://' %}
+          {% assign src = post.media_subpath | append: '/' | append: src | replace: '///', '/' | replace: '//', '/' %}
+        {% endunless %}
+      {% endif %}
+    {% endif %}
+
+    {% if forloop.first %}
+      <!-- ============ FEATURED HERO ============ -->
+      <article class="mag-feature diff-{{ diff | downcase | default: 'none' }}">
+        <a href="{{ post.url | relative_url }}" class="feature-link">
+          {% if src != '' %}<img class="feature-img" src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">{% endif %}
+          <div class="feature-shade"></div>
+          <div class="feature-content">
+            <span class="feature-kicker">// featured · latest</span>
+            <div class="machine-tagline">
+              {% if diff != '' %}<span class="badge-diff">{{ diff }}</span>{% endif %}
+              {% if os != '' %}<span class="badge-os">{{ os }}</span>{% endif %}
+            </div>
+            <h2 class="feature-name">{{ machine_name | strip }}</h2>
+            <p class="feature-excerpt">{% include post-summary.html %}</p>
+            <div class="feature-foot">
+              <span class="m0no">{% include datetime.html date=post.date lang=lang %}</span>
+              {% if post.tags.size > 0 %}
+                <span class="machine-tags">{% for tag in post.tags limit: 4 %}<span class="mtag">#{{ tag }}</span>{% endfor %}</span>
+              {% endif %}
+              <span class="feature-cta">read&nbsp;→</span>
+            </div>
+          </div>
+        </a>
+      </article>
+    {% else %}
+      <!-- ============ GRID CARD ============ -->
+      <article class="mag-card diff-{{ diff | downcase | default: 'none' }}">
+        <a href="{{ post.url | relative_url }}" class="card-link">
+          {% if src != '' %}
+            <div class="card-thumb">
+              <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">
+              <span class="card-index">{{ idx }}</span>
+            </div>
           {% endif %}
-          {% assign alt = post.image.alt | xml_escape | default: 'Preview Image' %}
-          <div class="machine-thumb">
-            <img src="{{ src }}" alt="{{ alt }}">
-            <span class="machine-index">{{ idx }}</span>
+          <div class="card-body2">
+            <div class="machine-tagline">
+              {% if diff != '' %}<span class="badge-diff">{{ diff }}</span>{% endif %}
+              {% if os != '' %}<span class="badge-os">{{ os }}</span>{% endif %}
+              <span class="badge-path">/{{ machine_name | downcase | strip }}</span>
+            </div>
+            <h3 class="card-name">{{ machine_name | strip }}</h3>
+            <p class="card-excerpt">{% include post-summary.html %}</p>
+            <div class="card-foot">
+              <span class="mono-date">{% include datetime.html date=post.date lang=lang %}</span>
+              {% if post.tags.size > 0 %}
+                <span class="machine-tags">{% for tag in post.tags limit: 3 %}<span class="mtag">#{{ tag }}</span>{% endfor %}</span>
+              {% endif %}
+            </div>
           </div>
-        {% endif %}
-
-        <div class="machine-body">
-          <div class="machine-tagline">
-            {% if diff != '' %}<span class="badge-diff">{{ diff }}</span>{% endif %}
-            {% if os != '' %}<span class="badge-os">{{ os }}</span>{% endif %}
-            <span class="badge-path">/{{ machine_name | downcase | strip }}</span>
-          </div>
-
-          <h1 class="card-title machine-name">{{ machine_name | strip }}</h1>
-
-          <div class="card-text content machine-excerpt">
-            <p>{% include post-summary.html %}</p>
-          </div>
-
-          <div class="post-meta machine-footer">
-            <span class="machine-date">
-              <i class="far fa-calendar fa-fw"></i>
-              {% include datetime.html date=post.date lang=lang %}
-            </span>
-            {% if post.tags.size > 0 %}
-              <span class="machine-tags">
-                {% for tag in post.tags limit: 3 %}<span class="mtag">#{{ tag }}</span>{% endfor %}
-              </span>
-            {% endif %}
-          </div>
-        </div>
-      </a>
-    </article>
+        </a>
+      </article>
+    {% endif %}
   {% endfor %}
 </div>
-<!-- #post-list -->
+<!-- #mag-grid -->
 
 {% if paginator.total_pages > 1 %}
   {% include post-paginator.html %}
