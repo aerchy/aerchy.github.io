@@ -114,20 +114,26 @@ body {
   padding: 1rem 1.1rem;
 }
 
-/* ---- Search box ---- */
-#search-input,
-.search input {
+/* ---- Search box ----
+   Chirpy's visible pill is the <search> wrapper (bg: var(--main-bg)).
+   No backdrop-filter anywhere here: nesting it inside the topbar layer
+   renders as a white artifact in Chromium. */
+search {
   border-radius: 22px !important;
   background: var(--pill-bg) !important;
-  backdrop-filter: blur(10px);
   border: 1px solid var(--pill-border) !important;
-  transition: all 0.25s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-#search-input:focus,
-.search input:focus {
+search:focus-within {
   border-color: var(--glass-hover-border) !important;
   box-shadow: 0 0 0 4px rgba(128, 128, 128, 0.12);
+}
+
+#search-input,
+.search input {
+  background: transparent !important;
+  border: none !important;
 }
 
 /* ---- Tags as glass pills ---- */
@@ -164,11 +170,10 @@ blockquote {
   border-radius: 0 10px 10px 0;
 }
 
-/* ---- Top bar frosted ---- */
+/* ---- Top bar: solid matte (no backdrop-filter — nesting it with the
+   search box's own layer produced a white rendering artifact) ---- */
 #topbar-wrapper {
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  background: var(--glass-bg) !important;
+  background: var(--main-bg) !important;
 }
 
 /* ---- Avatar hover ---- */
