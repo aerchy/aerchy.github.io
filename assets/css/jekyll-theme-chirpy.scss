@@ -13,40 +13,78 @@
 ';
 
 /* ============================================
-   Custom modern design enhancements
+   Glassmorphism modern design
    ============================================ */
 
 $accent: #7c8cff;
+$glass-blur: 16px;
 
-/* Post preview cards on home */
+/* Animated gradient background for the whole page */
+body {
+  background: linear-gradient(135deg, #10131c 0%, #171a2b 45%, #1b1430 100%) fixed;
+}
+
+html:not([data-mode='dark']) body {
+  background: linear-gradient(135deg, #eef1fb 0%, #f6f0ff 50%, #eaf3ff 100%) fixed;
+}
+
+/* ---- Glass helper look ---- */
+@mixin glass($opacity: 0.06, $border: 0.12) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($glass-blur) saturate(140%);
+  -webkit-backdrop-filter: blur($glass-blur) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, $border);
+}
+
+html:not([data-mode='dark']) {
+  #sidebar,
+  #post-list .card,
+  #search-results,
+  #panel-wrapper .access,
+  #tail-wrapper {
+    background: rgba(255, 255, 255, 0.55) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* ---- Sidebar as frosted glass ---- */
+#sidebar {
+  @include glass(0.05, 0.1);
+  background: rgba(20, 24, 40, 0.55) !important;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.25);
+}
+
+/* ---- Post cards frosted glass ---- */
 #post-list .card {
-  border-radius: 14px;
+  @include glass(0.06, 0.12);
+  background: rgba(30, 34, 54, 0.45) !important;
+  border-radius: 18px;
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  border: 1px solid rgba(124, 140, 255, 0.08);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
 
 #post-list .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  transform: translateY(-6px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  border-color: rgba(124, 140, 255, 0.5);
 }
 
-/* Preview image with subtle zoom + darken overlay on hover */
+/* Preview image zoom + darken */
 #post-list .preview-img {
   overflow: hidden;
-  position: relative;
 }
 
 #post-list .preview-img img {
-  transition: transform 0.4s ease, filter 0.4s ease;
+  transition: transform 0.5s ease, filter 0.5s ease;
 }
 
 #post-list .card:hover .preview-img img {
-  transform: scale(1.06);
-  filter: brightness(0.75);
+  transform: scale(1.08);
+  filter: brightness(0.7) saturate(1.2);
 }
 
-/* Card title */
 #post-list .card-title {
   font-weight: 700;
   transition: color 0.2s ease;
@@ -56,74 +94,126 @@ $accent: #7c8cff;
   color: $accent;
 }
 
-/* Post main featured image */
-.post img[data-src],
-.post .preview-img img {
-  border-radius: 12px;
+/* ---- Right panel (Recently Updated / Trending Tags) glass ---- */
+#panel-wrapper .access .post-content {
+  @include glass(0.05, 0.1);
+  background: rgba(30, 34, 54, 0.4) !important;
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
 }
 
-/* Tags */
+/* ---- Search box glass ---- */
+#search-results,
+#search-result-wrapper {
+  border-radius: 14px;
+}
+
+#search-input,
+.search input {
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  transition: all 0.25s ease;
+}
+
+#search-input:focus,
+.search input:focus {
+  border-color: rgba(124, 140, 255, 0.6) !important;
+  box-shadow: 0 0 0 4px rgba(124, 140, 255, 0.15);
+}
+
+/* ---- Tags as glass pills ---- */
 .post-tag {
   border-radius: 20px !important;
-  transition: all 0.2s ease;
+  background: rgba(124, 140, 255, 0.12) !important;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(124, 140, 255, 0.25) !important;
+  transition: all 0.25s ease;
 }
 
 .post-tag:hover {
   background: $accent !important;
   color: #fff !important;
   transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(124, 140, 255, 0.4);
 }
 
-/* Code blocks softer corners */
+/* ---- Post page article as glass ---- */
+.post {
+  border-radius: 18px;
+}
+
+/* ---- Code blocks frosted ---- */
+div.highlighter-rouge,
 .highlight {
-  border-radius: 10px;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-div.highlighter-rouge {
-  border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-}
-
-/* Blockquote accent */
+/* ---- Blockquote accent ---- */
 blockquote {
   border-left-color: $accent !important;
+  background: rgba(124, 140, 255, 0.06);
+  border-radius: 0 10px 10px 0;
+  backdrop-filter: blur(4px);
 }
 
-/* Smooth links */
-a {
-  transition: color 0.2s ease;
+/* ---- Top bar frosted when scrolling ---- */
+#topbar-wrapper {
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  background: rgba(20, 24, 40, 0.45) !important;
 }
 
-/* Scroll-to-top button */
-#back-to-top {
-  transition: transform 0.2s ease;
+html:not([data-mode='dark']) #topbar-wrapper {
+  background: rgba(255, 255, 255, 0.5) !important;
 }
 
-#back-to-top:hover {
-  transform: translateY(-3px) scale(1.05);
-}
-
-/* Sidebar avatar hover */
+/* ---- Avatar hover ---- */
 #avatar {
-  transition: transform 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  box-shadow: 0 4px 18px rgba(124, 140, 255, 0.25);
 }
 
 #avatar:hover {
-  transform: scale(1.05) rotate(2deg);
+  transform: scale(1.06) rotate(2deg);
+  box-shadow: 0 8px 28px rgba(124, 140, 255, 0.45);
 }
 
-/* Fade-in animation for post list items */
-#post-list .card {
-  animation: fadeInUp 0.5s ease both;
+/* ---- Back to top ---- */
+#back-to-top {
+  backdrop-filter: blur(8px);
+  background: rgba(124, 140, 255, 0.25) !important;
+  border: 1px solid rgba(124, 140, 255, 0.4);
+  transition: transform 0.25s ease;
 }
+
+#back-to-top:hover {
+  transform: translateY(-3px) scale(1.08);
+}
+
+/* ---- Fade-in animation ---- */
+#post-list .card {
+  animation: fadeInUp 0.55s ease both;
+}
+
+#post-list .card:nth-child(2) { animation-delay: 0.08s; }
+#post-list .card:nth-child(3) { animation-delay: 0.16s; }
+#post-list .card:nth-child(4) { animation-delay: 0.24s; }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Smooth links */
+a {
+  transition: color 0.2s ease;
 }
