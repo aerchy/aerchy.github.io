@@ -4,7 +4,7 @@ date: 2026-09-13 00:00:00 +0000
 categories: [HackTheBox, Web]
 tags: [htb, jenkins, jetty, gobuster, psexec, windows, keepass, ads, rce, groovy, pass-the-hash, credential-extraction, iis, smb]
 image:
-  path: https://i.pinimg.com/originals/4e/83/68/4e836835dcb96ed29267dc4d09850e4c.gif
+  path: /assets/img/jeeves-1200x600.gif
 ---
 
 ## Reconnaissance Phase
