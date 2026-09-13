@@ -18,9 +18,10 @@
 
 $glass-blur: 18px;
 
-/* ---- Theme-aware glass variables ---- */
-/* Light defaults */
-:root {
+/* ---- Theme-aware glass variables (Chirpy uses data-bs-theme) ---- */
+/* Light */
+:root,
+:root[data-bs-theme='light'] {
   --page-bg: #f2f2f3;
   --glass-bg: rgba(255, 255, 255, 0.6);
   --glass-border: rgba(0, 0, 0, 0.08);
@@ -29,11 +30,16 @@ $glass-blur: 18px;
   --pill-border: rgba(0, 0, 0, 0.12);
   --pill-hover-bg: #1a1a1a;
   --pill-hover-color: #fff;
+  --link-color: #1a1a1a;
+  --link-underline-color: rgba(0, 0, 0, 0.25);
 }
 
-/* Dark forced */
-html[data-mode='dark'] {
+/* Dark (forced via config or toggled) */
+:root[data-bs-theme='dark'] {
   --page-bg: #0a0a0a;
+  --main-bg: #0a0a0a;
+  --mask-bg: #050505;
+  --card-bg: rgba(20, 20, 20, 0.55);
   --glass-bg: rgba(20, 20, 20, 0.55);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-hover-border: rgba(255, 255, 255, 0.25);
@@ -41,20 +47,10 @@ html[data-mode='dark'] {
   --pill-border: rgba(255, 255, 255, 0.14);
   --pill-hover-bg: rgba(255, 255, 255, 0.9);
   --pill-hover-color: #0a0a0a;
-}
-
-/* Dark via system preference (no explicit toggle) */
-@media (prefers-color-scheme: dark) {
-  html:not([data-mode='light']) {
-    --page-bg: #0a0a0a;
-    --glass-bg: rgba(20, 20, 20, 0.55);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-hover-border: rgba(255, 255, 255, 0.25);
-    --pill-bg: rgba(255, 255, 255, 0.06);
-    --pill-border: rgba(255, 255, 255, 0.14);
-    --pill-hover-bg: rgba(255, 255, 255, 0.9);
-    --pill-hover-color: #0a0a0a;
-  }
+  --link-color: #e6e6e6;
+  --link-underline-color: rgba(255, 255, 255, 0.25);
+  --sidebar-active-color: #ffffff;
+  --search-border-color: rgba(255, 255, 255, 0.12);
 }
 
 /* ---- Matte background ---- */
