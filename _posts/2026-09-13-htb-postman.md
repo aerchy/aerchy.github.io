@@ -4,7 +4,7 @@ date: 2026-09-13 00:00:00 +0000
 categories: [HackTheBox, Web]
 tags: [htb, cve-2019-12840, webmin, redis, rce, ssh, ssh-key-cracking, john, linpeas, metasploit]
 image:
-  path: /assets/img/Pasted image 20260911165815.png
+  path: https://i.pinimg.com/originals/f1/eb/a0/f1eba09749f72888d17f62c3ae0c7e7e.gif
 ---
 
 ## Reconnaissance Phase
