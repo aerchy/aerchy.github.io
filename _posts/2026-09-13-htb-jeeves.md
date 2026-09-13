@@ -245,7 +245,7 @@ The root flag file is visible in the directory listing.
 Alternate Data Streams are revealed, potentially containing the root flag. Extract the flag from the ADS:
 
 ```powershell
-type root.txt:flag
+more < hm.txt:root.txt:$DATA
 ```
 
 ![Extract ADS Flag](/assets/img/Pasted_image_20260908021829.png)
