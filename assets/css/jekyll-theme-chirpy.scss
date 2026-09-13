@@ -245,7 +245,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
@@ -261,14 +261,8 @@ body::before {
     linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
 }
 
-/* keep real content above the texture — only static content containers;
-   never touch #sidebar/#topbar (they are fixed/sticky and reposition if
-   given position:relative) */
-#main-wrapper,
-#core-wrapper {
-  position: relative;
-  z-index: 1;
-}
+/* texture sits at z-index:-1, so content needs no stacking bump here
+   (bumping #main-wrapper would trap the fixed search box behind the bar) */
 
 /* ---- Brand: terminal prompt + blinking cursor on the tagline ---- */
 .site-subtitle {
@@ -984,6 +978,54 @@ pre,
     gap: 0.9rem;
   }
 
+  /* reserve room on the right of the bar for the search box */
+  #sidebar {
+    padding-right: 14rem !important;
+  }
+
+  /* hide social icons in the top bar (they stay in the mobile drawer) */
+  #sidebar .sidebar-bottom {
+    display: none !important;
+  }
+
+  /* --- lift the search box into the top bar (right side) --- */
+  #topbar-wrapper {
+    position: static !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+  #breadcrumb {
+    display: none !important;
+  }
+  #topbar-wrapper search {
+    position: fixed !important;
+    top: 14px;
+    right: 2rem;
+    margin-right: 0 !important;
+    width: 200px;
+    max-width: 200px !important;
+    height: 34px;
+    z-index: 1002;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  }
+  :root[data-bs-theme='light'] #topbar-wrapper search {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  }
+  #topbar-wrapper search i {
+    color: var(--accent) !important;
+    opacity: 0.7;
+  }
+  /* search results overlay still fills the content area */
+  #search-result-wrapper {
+    margin-top: 0.5rem;
+  }
+
   /* --- content: full-width, centered, below the bar --- */
   #main-wrapper {
     margin-left: 0 !important;
@@ -993,12 +1035,7 @@ pre,
   #main {
     max-width: 1080px;
     margin: 0 auto !important;
-    padding: 0 1.5rem;
-  }
-
-  /* the in-content topbar (breadcrumb + search) sits under the nav bar */
-  #topbar-wrapper {
-    top: 62px !important;
+    padding: 0.5rem 1.5rem 0;
   }
 }
 
