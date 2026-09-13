@@ -223,3 +223,225 @@ blockquote {
 a {
   transition: color 0.2s ease;
 }
+
+/* ============================================================
+   TERMINAL NOIR — visual identity layer (monochrome, matte)
+   Pure CSS. Decorative only: never alters layout or behavior.
+   ============================================================ */
+
+:root {
+  --mono: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Consolas',
+    ui-monospace, 'Roboto Mono', monospace;
+  --accent: #1a1a1a; /* light-mode accent = near-black */
+}
+
+:root[data-bs-theme='dark'] {
+  --accent: #e8e8e8; /* dark-mode accent = near-white */
+}
+
+/* ---- Subtle blueprint grid texture behind everything ---- */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 78%);
+}
+
+:root[data-bs-theme='light'] body::before {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+/* keep real content above the texture — only static content containers;
+   never touch #sidebar/#topbar (they are fixed/sticky and reposition if
+   given position:relative) */
+#main-wrapper,
+#core-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Brand: terminal prompt + blinking cursor on the tagline ---- */
+.site-subtitle {
+  font-family: var(--mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+}
+
+.site-subtitle::before {
+  content: '> ';
+  opacity: 0.55;
+}
+
+.site-subtitle::after {
+  content: '▊';
+  margin-left: 2px;
+  animation: cursor-blink 1.15s steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+/* ---- Brand: site title tightened, mono tag prefix ---- */
+.site-title a {
+  letter-spacing: -0.01em;
+  font-weight: 800;
+}
+
+/* ---- Monospace identity on meta / navigation chrome ---- */
+#breadcrumb,
+.post-meta,
+.post-meta *,
+#post-list .card .text-muted,
+#access-lastmod,
+.timeago,
+#footer,
+#footer * {
+  font-family: var(--mono) !important;
+}
+
+/* nav labels get a subtle mono/technical feel */
+#sidebar .nav-link {
+  font-family: var(--mono) !important;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Post list cards: left accent rail that grows on hover ---- */
+#post-list .card {
+  position: relative;
+}
+
+#post-list .card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+}
+
+#post-list .card:hover::before {
+  transform: scaleY(1);
+}
+
+/* card titles: tighter, technical */
+#post-list .card-title {
+  letter-spacing: -0.01em;
+}
+
+/* ---- Section headings in posts: mono hash prefix ---- */
+.content h2 {
+  position: relative;
+}
+
+.content h2::before {
+  content: '# ';
+  font-family: var(--mono);
+  color: var(--accent);
+  opacity: 0.4;
+  font-weight: 600;
+}
+
+.content h3::before {
+  content: '## ';
+  font-family: var(--mono);
+  opacity: 0.28;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+/* ---- Tags: mono, terminal flag style ---- */
+.post-tag {
+  font-family: var(--mono) !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.01em;
+}
+
+/* Trending-tag list prepend a hash */
+#panel-wrapper .post-tag::before {
+  content: '#';
+  opacity: 0.4;
+  margin-right: 1px;
+}
+
+/* ---- Inline code / kbd: mono reinforced ---- */
+code,
+kbd,
+pre,
+.highlight {
+  font-family: var(--mono) !important;
+}
+
+/* ---- Custom text selection (monochrome) ---- */
+::selection {
+  background: var(--accent);
+  color: #0a0a0a;
+}
+
+/* ---- Custom scrollbar ---- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+  background-clip: padding-box;
+}
+
+:root[data-bs-theme='light'] * {
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+:root[data-bs-theme='light'] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+}
+
+/* ---- Post title on article page: mono kicker line above ---- */
+.post h1 {
+  letter-spacing: -0.02em;
+}
+
+/* ---- Reduce motion friendliness ---- */
+@media (prefers-reduced-motion: reduce) {
+  .site-subtitle::after {
+    animation: none;
+  }
+  #post-list .card {
+    animation: none;
+  }
+}
