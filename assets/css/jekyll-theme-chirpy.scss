@@ -13,51 +13,72 @@
 ';
 
 /* ============================================
-   Glassmorphism modern design
+   Matte black glassmorphism design
    ============================================ */
 
-$accent: #8a8f98;
 $glass-blur: 18px;
 
-/* Matte black background */
-body {
-  background: #0a0a0a fixed;
+/* ---- Theme-aware glass variables ---- */
+/* Light defaults */
+:root {
+  --page-bg: #f2f2f3;
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-hover-border: rgba(0, 0, 0, 0.2);
+  --pill-bg: rgba(0, 0, 0, 0.05);
+  --pill-border: rgba(0, 0, 0, 0.12);
+  --pill-hover-bg: #1a1a1a;
+  --pill-hover-color: #fff;
 }
 
-html:not([data-mode='dark']) body {
-  background: #f2f2f3 fixed;
+/* Dark forced */
+html[data-mode='dark'] {
+  --page-bg: #0a0a0a;
+  --glass-bg: rgba(20, 20, 20, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-hover-border: rgba(255, 255, 255, 0.25);
+  --pill-bg: rgba(255, 255, 255, 0.06);
+  --pill-border: rgba(255, 255, 255, 0.14);
+  --pill-hover-bg: rgba(255, 255, 255, 0.9);
+  --pill-hover-color: #0a0a0a;
 }
 
-/* ---- Glass helper look ---- */
-@mixin glass($opacity: 0.06, $border: 0.12) {
-  background: rgba(255, 255, 255, $opacity);
-  backdrop-filter: blur($glass-blur) saturate(140%);
-  -webkit-backdrop-filter: blur($glass-blur) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, $border);
-}
-
-html:not([data-mode='dark']) {
-  #sidebar,
-  #post-list .card,
-  #search-results,
-  #panel-wrapper .access,
-  #tail-wrapper {
-    background: rgba(255, 255, 255, 0.55) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+/* Dark via system preference (no explicit toggle) */
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode='light']) {
+    --page-bg: #0a0a0a;
+    --glass-bg: rgba(20, 20, 20, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-hover-border: rgba(255, 255, 255, 0.25);
+    --pill-bg: rgba(255, 255, 255, 0.06);
+    --pill-border: rgba(255, 255, 255, 0.14);
+    --pill-hover-bg: rgba(255, 255, 255, 0.9);
+    --pill-hover-color: #0a0a0a;
   }
 }
 
-/* ---- Sidebar as frosted glass ---- */
+/* ---- Matte background ---- */
+body {
+  background: var(--page-bg) fixed !important;
+}
+
+/* ---- Glass helper ---- */
+@mixin glass {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur($glass-blur) saturate(140%);
+  -webkit-backdrop-filter: blur($glass-blur) saturate(140%);
+  border: 1px solid var(--glass-border);
+}
+
+/* ---- Sidebar ---- */
 #sidebar {
-  @include glass(0.04, 0.08);
-  background: rgba(15, 15, 15, 0.62) !important;
+  @include glass;
   box-shadow: 4px 0 30px rgba(0, 0, 0, 0.4);
 }
 
-/* ---- Post cards frosted glass ---- */
+/* ---- Post cards ---- */
 #post-list .card {
-  @include glass(0.05, 0.08);
-  background: rgba(18, 18, 18, 0.5) !important;
+  @include glass;
   border-radius: 18px;
   overflow: hidden;
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -67,8 +88,8 @@ html:not([data-mode='dark']) {
 
 #post-list .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
-  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.4);
+  border-color: var(--glass-hover-border);
 }
 
 /* Preview image zoom + darken */
@@ -90,84 +111,68 @@ html:not([data-mode='dark']) {
   transition: color 0.2s ease;
 }
 
-#post-list .card:hover .card-title {
-  color: #fff;
-}
-
-/* ---- Right panel (Recently Updated / Trending Tags) glass ---- */
+/* ---- Right panel ---- */
 #panel-wrapper .access .post-content {
-  @include glass(0.04, 0.08);
-  background: rgba(18, 18, 18, 0.45) !important;
+  @include glass;
   border-radius: 16px;
   padding: 1rem 1.1rem;
 }
 
-/* ---- Search box glass ---- */
-#search-results,
-#search-result-wrapper {
-  border-radius: 14px;
-}
-
+/* ---- Search box ---- */
 #search-input,
 .search input {
   border-radius: 22px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  background: var(--pill-bg) !important;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid var(--pill-border) !important;
   transition: all 0.25s ease;
 }
 
 #search-input:focus,
 .search input:focus {
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+  border-color: var(--glass-hover-border) !important;
+  box-shadow: 0 0 0 4px rgba(128, 128, 128, 0.12);
 }
 
 /* ---- Tags as glass pills ---- */
 .post-tag {
   border-radius: 20px !important;
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: var(--pill-bg) !important;
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid var(--pill-border) !important;
   transition: all 0.25s ease;
 }
 
 .post-tag:hover {
-  background: rgba(255, 255, 255, 0.9) !important;
-  color: #0a0a0a !important;
+  background: var(--pill-hover-bg) !important;
+  color: var(--pill-hover-color) !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
-/* ---- Post page article as glass ---- */
+/* ---- Post page article ---- */
 .post {
   border-radius: 18px;
 }
 
-/* ---- Code blocks frosted ---- */
+/* ---- Code blocks ---- */
 div.highlighter-rouge,
 .highlight {
   border-radius: 12px !important;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* ---- Blockquote accent ---- */
+/* ---- Blockquote ---- */
 blockquote {
-  border-left-color: rgba(255, 255, 255, 0.35) !important;
-  background: rgba(255, 255, 255, 0.03);
+  border-left-color: var(--glass-hover-border) !important;
   border-radius: 0 10px 10px 0;
-  backdrop-filter: blur(4px);
 }
 
-/* ---- Top bar frosted when scrolling ---- */
+/* ---- Top bar frosted ---- */
 #topbar-wrapper {
   backdrop-filter: blur(12px) saturate(140%);
   -webkit-backdrop-filter: blur(12px) saturate(140%);
-  background: rgba(10, 10, 10, 0.55) !important;
-}
-
-html:not([data-mode='dark']) #topbar-wrapper {
-  background: rgba(242, 242, 243, 0.6) !important;
+  background: var(--glass-bg) !important;
 }
 
 /* ---- Avatar hover ---- */
@@ -184,8 +189,8 @@ html:not([data-mode='dark']) #topbar-wrapper {
 /* ---- Back to top ---- */
 #back-to-top {
   backdrop-filter: blur(8px);
-  background: rgba(255, 255, 255, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--pill-bg) !important;
+  border: 1px solid var(--pill-border);
   transition: transform 0.25s ease;
 }
 
