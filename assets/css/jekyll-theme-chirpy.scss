@@ -66,10 +66,11 @@ body {
   border: 1px solid var(--glass-border);
 }
 
-/* ---- Sidebar ---- */
+/* ---- Sidebar: minimal, solid matte, thin divider ---- */
 #sidebar {
-  @include glass;
-  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.4);
+  background: var(--main-bg) !important;
+  border-right: 1px solid var(--glass-border);
+  box-shadow: none;
 }
 
 /* ---- Post cards ---- */
@@ -637,13 +638,225 @@ pre,
   .machine-name { font-size: 1.25rem !important; }
 }
 
+/* ============================================================
+   MINIMAL NAVIGATION (sidebar) — no pills, animated indicators
+   ============================================================ */
+#sidebar .nav-item {
+  margin: 1px 0;
+  opacity: 0;
+  animation: nav-in 0.45s ease forwards;
+}
+#sidebar .nav-item:nth-child(1) { animation-delay: 0.05s; }
+#sidebar .nav-item:nth-child(2) { animation-delay: 0.11s; }
+#sidebar .nav-item:nth-child(3) { animation-delay: 0.17s; }
+#sidebar .nav-item:nth-child(4) { animation-delay: 0.23s; }
+#sidebar .nav-item:nth-child(5) { animation-delay: 0.29s; }
+
+@keyframes nav-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+#sidebar .nav-link {
+  position: relative;
+  border-radius: 0 !important;
+  padding-left: 1.5rem !important;
+  background: transparent !important;
+  opacity: 0.6;
+  transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
+}
+
+/* animated '>' prompt that slides in */
+#sidebar .nav-link::before {
+  content: '>';
+  position: absolute;
+  left: 0.35rem;
+  font-family: var(--mono);
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#sidebar .nav-link:hover {
+  opacity: 1;
+  transform: translateX(5px);
+}
+#sidebar .nav-link:hover::before {
+  opacity: 0.7;
+  transform: translateX(0);
+}
+
+/* active item: full opacity + persistent prompt + accent bar */
+#sidebar .nav-item.active .nav-link {
+  opacity: 1;
+  color: var(--sidebar-active-color) !important;
+  font-weight: 700;
+}
+#sidebar .nav-item.active .nav-link::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+#sidebar .nav-item.active .nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* icons a touch smaller/tech */
+#sidebar .nav-link i {
+  transition: transform 0.25s ease;
+}
+#sidebar .nav-link:hover i {
+  transform: scale(1.15);
+}
+
+/* ---- Social icons: minimal hover ---- */
+.sidebar-bottom a {
+  opacity: 0.5;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.sidebar-bottom a:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+/* ---- Site title / avatar entrance ---- */
+.profile-wrapper {
+  animation: fade-down 0.6s ease both;
+}
+@keyframes fade-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   MINIMAL RIGHT PANEL — no boxes, thin rules, animated rows
+   ============================================================ */
+#panel-wrapper .access .post-content,
+#panel-wrapper .access {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* panel headings as terminal section labels */
+#panel-wrapper .panel-heading {
+  font-family: var(--mono) !important;
+  font-size: 0.7rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.5;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 0.75rem;
+}
+#panel-wrapper .panel-heading::before {
+  content: '// ';
+  color: var(--accent);
+  opacity: 0.6;
+}
+
+/* Recently Updated rows */
+#access-lastmod ul li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 0.9rem;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.08);
+  transition: padding 0.25s ease;
+}
+#access-lastmod ul li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  opacity: 0.4;
+  transition: opacity 0.25s ease;
+}
+#access-lastmod ul li:hover {
+  padding-left: 1.2rem;
+}
+#access-lastmod ul li:hover::before {
+  opacity: 1;
+}
+#access-lastmod ul li a {
+  transition: color 0.25s ease;
+}
+
+/* Trending tags: minimal, no heavy fills */
+#panel-wrapper .post-tag {
+  margin: 0 0.3rem 0.4rem 0 !important;
+  background: transparent !important;
+  border-color: var(--glass-border) !important;
+  opacity: 0.7;
+}
+#panel-wrapper .post-tag:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+/* fade the whole panel sections in */
+#panel-wrapper .access section,
+#panel-wrapper .access > div {
+  animation: fade-in 0.6s ease both;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   MINIMAL TOPBAR — breadcrumb as path, animated trigger
+   ============================================================ */
+#breadcrumb {
+  opacity: 0.7;
+}
+#breadcrumb a {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+#breadcrumb a:hover {
+  opacity: 1;
+}
+/* thin divider under the topbar */
+#topbar-wrapper {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* ============================================================
+   MINIMAL FOOTER
+   ============================================================ */
+#footer {
+  opacity: 0.55;
+  font-size: 0.72rem;
+}
+
+/* ============================================================
+   Content entrance — gentle stagger for the article
+   ============================================================ */
+#core-wrapper > .post,
+#post-wrapper .post {
+  animation: fade-in 0.5s ease both;
+}
+
 /* ---- Reduce motion friendliness ---- */
 @media (prefers-reduced-motion: reduce) {
   .site-subtitle::after,
   .ops-cmd::after {
     animation: none;
   }
-  #post-list .card {
+  #post-list .card,
+  #sidebar .nav-item,
+  .profile-wrapper,
+  #panel-wrapper .access section,
+  #panel-wrapper .access > div,
+  #core-wrapper > .post {
     animation: none;
+    opacity: 1;
   }
 }
