@@ -1,0 +1,67 @@
+---
+layout: default
+---
+
+<style>
+/* Modern Design Enhancements - Subtle & Refined */
+
+:root {
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Post Cards - Subtle improvements */
+.post-preview,
+article.post-item {
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: var(--transition);
+}
+
+.post-preview:hover,
+article.post-item:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Image Overlay Effect */
+.post-preview img,
+article.post-item img {
+  transition: var(--transition);
+  width: 100%;
+  height: auto;
+  border-radius: 10px 10px 0 0;
+}
+
+.post-preview:hover img,
+article.post-item:hover img {
+  filter: brightness(0.9) saturate(1.1);
+}
+
+/* Main post article */
+article.post {
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition: var(--transition);
+}
+
+article.post:hover {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+}
+
+/* Featured image in post */
+article.post img.post-image,
+.post-content > img {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+}
+
+article.post img.post-image:hover,
+.post-content > img:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: scale(1.01);
+}
+</style>
+
+{{ content }}
