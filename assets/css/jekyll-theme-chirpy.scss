@@ -1,0 +1,129 @@
+---
+---
+
+@use 'abstracts/variables' with (
+  $theme: '{{ site.theme_mode }}'
+);
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* ============================================
+   Custom modern design enhancements
+   ============================================ */
+
+$accent: #7c8cff;
+
+/* Post preview cards on home */
+#post-list .card {
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid rgba(124, 140, 255, 0.08);
+}
+
+#post-list .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* Preview image with subtle zoom + darken overlay on hover */
+#post-list .preview-img {
+  overflow: hidden;
+  position: relative;
+}
+
+#post-list .preview-img img {
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+#post-list .card:hover .preview-img img {
+  transform: scale(1.06);
+  filter: brightness(0.75);
+}
+
+/* Card title */
+#post-list .card-title {
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+#post-list .card:hover .card-title {
+  color: $accent;
+}
+
+/* Post main featured image */
+.post img[data-src],
+.post .preview-img img {
+  border-radius: 12px;
+}
+
+/* Tags */
+.post-tag {
+  border-radius: 20px !important;
+  transition: all 0.2s ease;
+}
+
+.post-tag:hover {
+  background: $accent !important;
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+/* Code blocks softer corners */
+.highlight {
+  border-radius: 10px;
+}
+
+div.highlighter-rouge {
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* Blockquote accent */
+blockquote {
+  border-left-color: $accent !important;
+}
+
+/* Smooth links */
+a {
+  transition: color 0.2s ease;
+}
+
+/* Scroll-to-top button */
+#back-to-top {
+  transition: transform 0.2s ease;
+}
+
+#back-to-top:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* Sidebar avatar hover */
+#avatar {
+  transition: transform 0.3s ease;
+}
+
+#avatar:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
+/* Fade-in animation for post list items */
+#post-list .card {
+  animation: fadeInUp 0.5s ease both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
