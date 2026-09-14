@@ -47,24 +47,24 @@ refactor: true
   {% endfor %}
 {% endif %}
 
+<!-- ===== Section header ===== -->
+<header id="latest-header">
+  <span class="lh-badge">Blog</span>
+  <div class="lh-row">
+    <div class="lh-left">
+      <h1 class="lh-title">Latest Articles</h1>
+      <p class="lh-desc">{{ site.description | default: 'Writeups, notes and everything in between.' }}</p>
+    </div>
+    <a href="{{ '/archives/' | relative_url }}" class="lh-btn">View All Posts <span class="lh-arrow">&rarr;</span></a>
+  </div>
+</header>
+
 <div id="mag-grid" class="flex-grow-1">
   {% for post in posts %}
-    <!-- derive machine metadata from the title -->
     {% assign machine_name = post.title | remove: 'HTB - ' | split: ' (' | first %}
 
-    {% assign diff = '' %}
-    {% if post.title contains 'Easy' %}{% assign diff = 'Easy' %}{% endif %}
-    {% if post.title contains 'Medium' %}{% assign diff = 'Medium' %}{% endif %}
-    {% if post.title contains 'Hard' %}{% assign diff = 'Hard' %}{% endif %}
-    {% if post.title contains 'Insane' %}{% assign diff = 'Insane' %}{% endif %}
-
-    {% assign os = '' %}
-    {% if post.title contains 'Windows' %}{% assign os = 'Windows' %}{% endif %}
-    {% if post.title contains 'Linux' %}{% assign os = 'Linux' %}{% endif %}
-    {% if post.title contains 'Active Directory' %}{% assign os = 'Windows' %}{% endif %}
-
-    {% assign idx = forloop.index %}
-    {% if idx < 10 %}{% assign idx = idx | prepend: '0' %}{% endif %}
+    {% assign category = '' %}
+    {% if post.categories.size > 0 %}{% assign category = post.categories | last %}{% endif %}
 
     <!-- resolve image src -->
     {% assign src = '' %}
@@ -77,29 +77,24 @@ refactor: true
       {% endif %}
     {% endif %}
 
-    <!-- ============ POST ROW (horizontal card) ============ -->
-    <article class="post-row diff-{{ diff | downcase | default: 'none' }}">
-      <a href="{{ post.url | relative_url }}" class="row-link">
+    <!-- ============ VERTICAL CARD ============ -->
+    <article class="v-card">
+      <a href="{{ post.url | relative_url }}" class="v-link">
         {% if src != '' %}
-          <div class="row-thumb">
+          <div class="v-thumb">
             <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">
+            {% if category != '' %}<span class="v-cat">{{ category }}</span>{% endif %}
           </div>
         {% endif %}
-        <div class="row-body">
-          <div class="machine-tagline">
-            {% if diff != '' %}<span class="badge-diff">{{ diff }}</span>{% endif %}
-            {% if os != '' %}<span class="badge-os">{{ os }}</span>{% endif %}
-            <span class="badge-path">/{{ machine_name | downcase | strip }}</span>
+        <div class="v-body">
+          <div class="v-meta">
+            <span class="v-author">{{ post.author | default: site.social.name | default: 'archy' }}</span>
+            <span class="v-dot">&bull;</span>
+            <span class="v-date">{% include datetime.html date=post.date lang=lang %}</span>
           </div>
-          <h2 class="row-name">{{ machine_name | strip }}</h2>
-          <p class="row-excerpt">{% include post-summary.html %}</p>
-          <div class="row-foot">
-            <span class="mono-date">{% include datetime.html date=post.date lang=lang %}</span>
-            {% if post.tags.size > 0 %}
-              <span class="machine-tags">{% for tag in post.tags limit: 4 %}<span class="mtag">#{{ tag }}</span>{% endfor %}</span>
-            {% endif %}
-            <span class="row-cta">read&nbsp;→</span>
-          </div>
+          <h2 class="v-title">{{ machine_name | strip }}</h2>
+          <p class="v-excerpt">{% include post-summary.html %}</p>
+          <span class="v-more">Read More <span class="v-arrow">&#8599;</span></span>
         </div>
       </a>
     </article>
