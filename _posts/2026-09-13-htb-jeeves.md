@@ -77,7 +77,7 @@ gobuster dir -u http://<target>:50000/ -w /usr/share/dirbuster/wordlists/directo
 
 ![](/assets/img/jeeves/Pasted_image_20260908014355.png)
 
-The scan reveals several directories, including `/jeeves`,  a path leading to Jenkins.
+The scan reveals several directories, including `/askjeeves`,  a path leading to Jenkins.
 
 ![](/assets/img/jeeves/Pasted_image_20260908020154.png)
 
