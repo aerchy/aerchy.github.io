@@ -1132,25 +1132,75 @@ pre,
   #breadcrumb {
     display: none !important;
   }
+  /* collapsed search — just a magnifier button that expands into an overlay */
   #topbar-wrapper search {
     position: fixed !important;
-    top: 20px;
+    top: 18px;
     right: 2rem;
     margin-right: 0 !important;
-    width: 210px;
-    max-width: 210px !important;
-    height: 36px;
+    width: 40px;
+    max-width: 40px !important;
+    height: 40px;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50% !important;
     z-index: 1002;
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  }
-  :root[data-bs-theme='light'] #topbar-wrapper search {
-    background: rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    cursor: pointer;
+    background: var(--pill-bg) !important;
+    border: 1px solid var(--pill-border) !important;
+    overflow: hidden;
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.3s ease,
+      border-radius 0.3s ease, top 0.35s ease, background 0.3s ease;
   }
   #topbar-wrapper search i {
     color: var(--accent) !important;
-    opacity: 0.7;
+    opacity: 0.8;
+    margin: 0 !important;
+    transition: opacity 0.2s ease, font-size 0.2s ease;
+  }
+  #topbar-wrapper search:hover { border-color: var(--glass-hover-border) !important; }
+  #topbar-wrapper search:hover i { opacity: 1; }
+  #topbar-wrapper search #search-input { display: none; }
+
+  /* expanded overlay state */
+  body.search-open #topbar-wrapper search {
+    top: 16vh;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(660px, 88vw);
+    max-width: 660px !important;
+    height: 58px;
+    border-radius: 16px !important;
+    padding: 0 1.1rem !important;
+    justify-content: flex-start;
+    gap: 0.8rem;
+    background: rgba(18, 18, 18, 0.92) !important;
+    border-color: var(--glass-hover-border) !important;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    z-index: 2600;
+  }
+  body.search-open #topbar-wrapper search i { font-size: 1.2rem; opacity: 0.9; }
+  body.search-open #topbar-wrapper search #search-input {
+    display: block;
+    flex: 1 1 auto;
+    background: transparent !important;
+    border: none !important;
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 0;
+  }
+  body.search-open #search-result-wrapper {
+    position: fixed;
+    top: calc(16vh + 74px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(660px, 88vw);
+    max-height: 60vh;
+    overflow-y: auto;
+    z-index: 2600;
   }
   /* search results overlay still fills the content area */
   #search-result-wrapper {
@@ -1625,6 +1675,46 @@ pre,
 }
 
 /* ============================================================
+   TAGS INDEX PAGE — clean monochrome mono pills
+   ============================================================ */
+#tags {
+  gap: 0.7rem 0.6rem;
+  padding-top: 0.5rem;
+  animation: fade-in 0.5s ease both;
+}
+#tags .tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0.58rem 0.95rem !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--glass-border) !important;
+  background: var(--glass-bg) !important;
+  box-shadow: none !important;
+  color: var(--link-color);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  transition: transform 0.2s ease, border-color 0.2s ease,
+    background 0.2s ease, color 0.2s ease;
+}
+#tags .tag::before { content: '#'; opacity: 0.4; }
+#tags .tag span {
+  margin: 0 !important;
+  font-family: var(--mono) !important;
+  font-size: 0.72em !important;
+  opacity: 0.5;
+}
+#tags .tag:hover {
+  transform: translateY(-2px);
+  border-color: var(--glass-hover-border) !important;
+  background: var(--pill-bg) !important;
+  color: var(--accent);
+}
+
+/* ============================================================
    CUSTOM ANIMATIONS — smooth & subtle
    ============================================================ */
 
@@ -1666,6 +1756,20 @@ body.is-leaving {
     transparent 70%
   );
 }
+
+/* Search overlay backdrop (dark, low-opacity, blurred) */
+#search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+body.search-open #search-overlay { opacity: 1; visibility: visible; }
 
 /* 3) 3D tilt on home cards */
 .v-card.tilt-on {

@@ -3,6 +3,7 @@ title: "HTB - Fluffy (Easy | Windows | Active Directory)"
 date: 2026-09-14 00:00:00 +0000
 categories: [HackTheBox, Active Directory]
 tags: [htb, active-directory, windows, adcs, esc16, shadow-credentials, kerberos, ldap, responder, net-ntlmv2, hashcat, certipy, bloodhound, winrm, cve-2025-24071, smb]
+description: "CVE-2025-24071 to spoof Windows File Explorer & ESC16 in ADCS"
 image:
   path: /assets/img/fluffy.png
 ---

@@ -109,7 +109,7 @@ refactor: true
             <span class="v-date">{% include datetime.html date=post.date lang=lang %}</span>
           </div>
           <h2 class="v-title">{{ machine_name | strip }}</h2>
-          <p class="v-excerpt">{% include post-summary.html %}</p>
+          <p class="v-excerpt">{% if post.description %}{{ post.description }}{% else %}{% include post-summary.html %}{% endif %}</p>
           <span class="v-more">Read More <span class="v-arrow">&#8599;</span></span>
         </div>
       </a>

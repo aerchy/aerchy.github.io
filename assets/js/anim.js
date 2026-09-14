@@ -152,4 +152,65 @@
     }, { passive: true });
     update();
   })();
+
+  /* ---------------------------------------------------------------------
+     5) TOC click — scroll so the heading lands BELOW the fixed top bar
+        (overrides tocbot's offset, which assumed a shorter bar)
+     --------------------------------------------------------------------- */
+  (function tocScroll() {
+    var OFFSET = 96; // 76px bar + breathing room
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('#toc a[href^="#"]');
+      if (!a) return;
+      var id = decodeURIComponent(a.getAttribute('href').slice(1));
+      var el = id && document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
+      e.stopPropagation(); // beat tocbot's own handler
+      var y = el.getBoundingClientRect().top + window.scrollY - OFFSET;
+      window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+      if (history.replaceState) history.replaceState(null, '', '#' + id);
+    }, true); // capture phase
+  })();
+
+  /* ---------------------------------------------------------------------
+     6) Minimal search — collapsed magnifier expands into a dark overlay
+     --------------------------------------------------------------------- */
+  (function searchOverlay() {
+    var mq = window.matchMedia('(min-width: 1200px)');
+    var search = document.getElementById('search');
+    var overlay = document.getElementById('search-overlay');
+    var input = document.getElementById('search-input');
+    var cancel = document.getElementById('search-cancel');
+    if (!search || !overlay) return;
+
+    function open() {
+      if (!mq.matches) return;
+      document.body.classList.add('search-open');
+      if (input) setTimeout(function () { input.focus(); }, 80);
+    }
+    function close() {
+      document.body.classList.remove('search-open');
+      if (input) input.blur();
+    }
+
+    search.addEventListener('click', function (e) {
+      if (!mq.matches) return;
+      if (!document.body.classList.contains('search-open')) {
+        e.preventDefault();
+        open();
+      }
+    });
+    overlay.addEventListener('click', close);
+    if (cancel) cancel.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && document.body.classList.contains('search-open')) close();
+      // quick-open with "/"
+      if (e.key === '/' && !document.body.classList.contains('search-open') &&
+          mq.matches && !/^(INPUT|TEXTAREA)$/.test((e.target.tagName || ''))) {
+        e.preventDefault();
+        open();
+      }
+    });
+  })();
 })();
