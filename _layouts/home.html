@@ -90,58 +90,33 @@ refactor: true
       {% endif %}
     {% endif %}
 
-    {% if forloop.first %}
-      <!-- ============ FEATURED HERO ============ -->
-      <article class="mag-feature diff-{{ diff | downcase | default: 'none' }}">
-        <a href="{{ post.url | relative_url }}" class="feature-link">
-          {% if src != '' %}<img class="feature-img" src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">{% endif %}
-          <div class="feature-shade"></div>
-          <div class="feature-content">
-            <span class="feature-kicker">// featured · latest</span>
-            <div class="machine-tagline">
-              {% if diff != '' %}<span class="badge-diff">{{ diff }}</span>{% endif %}
-              {% if os != '' %}<span class="badge-os">{{ os }}</span>{% endif %}
-            </div>
-            <h2 class="feature-name">{{ machine_name | strip }}</h2>
-            <p class="feature-excerpt">{% include post-summary.html %}</p>
-            <div class="feature-foot">
-              <span class="m0no">{% include datetime.html date=post.date lang=lang %}</span>
-              {% if post.tags.size > 0 %}
-                <span class="machine-tags">{% for tag in post.tags limit: 4 %}<span class="mtag">#{{ tag }}</span>{% endfor %}</span>
-              {% endif %}
-              <span class="feature-cta">read&nbsp;→</span>
-            </div>
+    <!-- ============ POST ROW (horizontal card) ============ -->
+    <article class="post-row diff-{{ diff | downcase | default: 'none' }}">
+      <a href="{{ post.url | relative_url }}" class="row-link">
+        {% if src != '' %}
+          <div class="row-thumb">
+            <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">
+            <span class="row-index">{{ idx }}</span>
           </div>
-        </a>
-      </article>
-    {% else %}
-      <!-- ============ GRID CARD ============ -->
-      <article class="mag-card diff-{{ diff | downcase | default: 'none' }}">
-        <a href="{{ post.url | relative_url }}" class="card-link">
-          {% if src != '' %}
-            <div class="card-thumb">
-              <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">
-              <span class="card-index">{{ idx }}</span>
-            </div>
-          {% endif %}
-          <div class="card-body2">
-            <div class="machine-tagline">
-              {% if diff != '' %}<span class="badge-diff">{{ diff }}</span>{% endif %}
-              {% if os != '' %}<span class="badge-os">{{ os }}</span>{% endif %}
-              <span class="badge-path">/{{ machine_name | downcase | strip }}</span>
-            </div>
-            <h3 class="card-name">{{ machine_name | strip }}</h3>
-            <p class="card-excerpt">{% include post-summary.html %}</p>
-            <div class="card-foot">
-              <span class="mono-date">{% include datetime.html date=post.date lang=lang %}</span>
-              {% if post.tags.size > 0 %}
-                <span class="machine-tags">{% for tag in post.tags limit: 3 %}<span class="mtag">#{{ tag }}</span>{% endfor %}</span>
-              {% endif %}
-            </div>
+        {% endif %}
+        <div class="row-body">
+          <div class="machine-tagline">
+            {% if diff != '' %}<span class="badge-diff">{{ diff }}</span>{% endif %}
+            {% if os != '' %}<span class="badge-os">{{ os }}</span>{% endif %}
+            <span class="badge-path">/{{ machine_name | downcase | strip }}</span>
           </div>
-        </a>
-      </article>
-    {% endif %}
+          <h2 class="row-name">{{ machine_name | strip }}</h2>
+          <p class="row-excerpt">{% include post-summary.html %}</p>
+          <div class="row-foot">
+            <span class="mono-date">{% include datetime.html date=post.date lang=lang %}</span>
+            {% if post.tags.size > 0 %}
+              <span class="machine-tags">{% for tag in post.tags limit: 4 %}<span class="mtag">#{{ tag }}</span>{% endfor %}</span>
+            {% endif %}
+            <span class="row-cta">read&nbsp;→</span>
+          </div>
+        </div>
+      </a>
+    </article>
   {% endfor %}
 </div>
 <!-- #mag-grid -->
