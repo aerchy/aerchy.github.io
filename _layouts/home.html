@@ -63,8 +63,22 @@ refactor: true
   {% for post in posts %}
     {% assign machine_name = post.title | remove: 'HTB - ' | split: ' (' | first %}
 
-    {% assign category = '' %}
-    {% if post.categories.size > 0 %}{% assign category = post.categories | last %}{% endif %}
+    <!-- derive OS (Windows / Linux) from the title tuple "(Diff | OS | Cat)" or tags -->
+    {% assign os = '' %}
+    {% if post.title contains '(' %}
+      {% assign _meta = post.title | split: '(' | last | remove: ')' | split: '|' %}
+      {% if _meta.size >= 2 %}{% assign os = _meta[1] | strip %}{% endif %}
+    {% endif %}
+    {% if os == '' or os == 'Windows' or os == 'Linux' %}
+      {% comment %} keep as-is {% endcomment %}
+    {% else %}
+      {% assign os = '' %}
+    {% endif %}
+    {% if os == '' %}
+      {% if post.tags contains 'windows' %}{% assign os = 'Windows' %}
+      {% elsif post.tags contains 'linux' %}{% assign os = 'Linux' %}{% endif %}
+    {% endif %}
+    {% assign os_slug = os | downcase %}
 
     <!-- resolve image src -->
     {% assign src = '' %}
@@ -83,7 +97,7 @@ refactor: true
         {% if src != '' %}
           <div class="v-thumb">
             <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">
-            {% if category != '' %}<span class="v-cat">{{ category }}</span>{% endif %}
+            {% if os != '' %}<span class="v-cat os-{{ os_slug }}">{{ os }}</span>{% endif %}
           </div>
         {% endif %}
         <div class="v-body">
