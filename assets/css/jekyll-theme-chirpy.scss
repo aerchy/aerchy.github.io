@@ -1580,8 +1580,139 @@ pre,
   border-bottom-color: var(--glass-border) !important;
 }
 
+/* ============================================================
+   CUSTOM ANIMATIONS — smooth & subtle
+   ============================================================ */
+
+/* 1) Page transition: fade in on load, fade out on internal navigation */
+@keyframes page-fade-in { from { opacity: 0; } to { opacity: 1; } }
+html.anim-ready body { animation: page-fade-in 0.4s ease both; }
+body.is-leaving {
+  animation: none !important;
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+
+/* 2) Cursor glow: soft monochrome spotlight riding on the background layer */
+#cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.025) 42%,
+    transparent 70%
+  );
+  will-change: transform;
+}
+#cursor-glow.is-on { opacity: 1; }
+:root[data-bs-theme='light'] #cursor-glow {
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.02) 42%,
+    transparent 70%
+  );
+}
+
+/* 3) 3D tilt on home cards */
+.v-card.tilt-on {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 4) Back-to-top scroll-progress ring */
+#back-to-top { overflow: visible; }
+.btt-ring {
+  position: absolute;
+  inset: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+.btt-track { stroke: var(--pill-border); stroke-width: 2.4; }
+.btt-prog {
+  stroke: var(--accent);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.12s linear;
+}
+
+/* 5) Link underline that draws in from the left on hover */
+.content a:not(.img-link),
+#page-category ul > li > a,
+#page-tag ul > li > a,
+#access-lastmod ul li a {
+  border-bottom: none !important;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  padding-bottom: 1px;
+  transition: background-size 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.2s ease;
+}
+.content a:not(.img-link):hover,
+#page-category ul > li > a:hover,
+#page-tag ul > li > a:hover,
+#access-lastmod ul li a:hover {
+  background-size: 100% 1px;
+}
+
+/* 6) TOC: stronger, smoother active-section indicator */
+#toc .toc-link {
+  position: relative;
+  transition: color 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#toc ul .is-active-link::before { display: none !important; } /* drop stock bar */
+#toc .toc-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 1.05rem;
+  border-radius: 2px;
+  background: var(--toc-highlight);
+  transform: translateY(-50%) scaleY(0);
+  transform-origin: center;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#toc .is-active-link { transform: translateX(7px); }
+#toc .is-active-link::after { transform: translateY(-50%) scaleY(1); }
+
+/* 7) "Blog" badge: very soft pulsing halo */
+@keyframes badge-pulse {
+  0% { box-shadow: 0 0 0 0 var(--brand-soft); }
+  70%, 100% { box-shadow: 0 0 0 9px transparent; }
+}
+.lh-badge { animation: badge-pulse 3.2s ease-out infinite; }
+
+/* 8) Lightbox affordance (glightbox handles the zoom itself) */
+.content .img-link,
+.content .popup { cursor: zoom-in; }
+
 /* ---- Reduce motion friendliness ---- */
 @media (prefers-reduced-motion: reduce) {
+  #cursor-glow { display: none !important; }
+  .lh-badge { animation: none !important; }
+  html.anim-ready body { animation: none !important; }
+  body.is-leaving { opacity: 1 !important; transition: none !important; }
+  .v-card.tilt-on { transition: none !important; transform: none !important; }
+  .content a:not(.img-link),
+  #page-category ul > li > a,
+  #page-tag ul > li > a,
+  #access-lastmod ul li a { transition: none !important; }
   .site-subtitle::after,
   .ops-cmd::after {
     animation: none;
