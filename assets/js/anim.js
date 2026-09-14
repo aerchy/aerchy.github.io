@@ -191,6 +191,10 @@
     }
     function close() {
       document.body.classList.remove('search-open');
+      // reset Chirpy's search state (clears results + restores the main content
+      // it hides while searching) so closing never leaves the page shifted
+      if (input) input.value = '';
+      if (cancel) cancel.click();
       if (input) input.blur();
     }
 
@@ -202,7 +206,6 @@
       }
     });
     overlay.addEventListener('click', close);
-    if (cancel) cancel.addEventListener('click', close);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && document.body.classList.contains('search-open')) close();
       // quick-open with "/"

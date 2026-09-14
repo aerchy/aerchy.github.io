@@ -1770,6 +1770,21 @@ body.is-leaving {
 }
 body.search-open #search-overlay { opacity: 1; visibility: visible; }
 
+/* highlighted match inside search snippets */
+mark.search-hl {
+  background: #ffd43b;
+  color: #0a0a0a;
+  padding: 0 0.15em;
+  border-radius: 3px;
+  font-weight: 700;
+}
+/* keep search result snippets to a single short line */
+#search-results > article > p {
+  -webkit-line-clamp: 2;
+  opacity: 0.85;
+  font-size: 0.9rem;
+}
+
 /* 3) 3D tilt on home cards */
 .v-card.tilt-on {
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
