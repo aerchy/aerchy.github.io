@@ -4,18 +4,25 @@
 # Encrypt a post for the client-side "protected post" feature.
 #
 # Usage:
-#   ruby tools/encrypt-post.rb path/to/content.md "your-password"
+#   ruby tools/encrypt-post.rb path/to/content.md
+#   (the password is asked interactively and hidden — it never touches the
+#    shell history, the repo, or the output)
 #
 # It renders the Markdown to HTML (kramdown + rouge, like Jekyll), encrypts it
 # with AES-256-GCM using a key derived from the password (PBKDF2-SHA256), and
 # prints a <div class="post-lock" ...> block. Paste that block as the BODY of a
-# post whose front matter has `protected: true`. The plaintext never ships.
+# post whose front matter has `protected: true`. The plaintext never ships and
+# the password is NEVER stored — only salt + iv + ciphertext go into the post.
+#
+# IMPORTANT: keep the plaintext source (content.md) OUT of the repo. Put it in
+# secret-src/ (git-ignored) or outside the project, and never commit it.
 #
 # NOTE: this folder is excluded from the Jekyll build (see _config.yml).
 
 require 'openssl'
 require 'base64'
 require 'securerandom'
+require 'io/console'
 require 'kramdown'
 begin
   require 'rouge'
@@ -25,10 +32,20 @@ end
 ITER = 200_000
 
 md_path = ARGV[0]
-password = ARGV[1]
 
-abort "Usage: ruby tools/encrypt-post.rb <content.md> <password>" if md_path.nil? || password.nil?
+abort "Usage: ruby tools/encrypt-post.rb <content.md>" if md_path.nil?
 abort "File not found: #{md_path}" unless File.exist?(md_path)
+
+# Ask for the password interactively (hidden) so it never lands in shell history.
+password = ARGV[1]
+if password.nil?
+  password = $stdin.getpass('Password: ')
+  confirm = $stdin.getpass('Confirm : ')
+  abort 'Passwords do not match.' unless password == confirm
+else
+  warn 'WARNING: passing the password as an argument leaves it in your shell history. Prefer running without it.'
+end
+abort 'Empty password.' if password.nil? || password.empty?
 
 markdown = File.read(md_path)
 
