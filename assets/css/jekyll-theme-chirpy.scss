@@ -319,13 +319,14 @@ body::after {
 body::before {
   background-image: url("/assets/img/topo-bg.svg") !important;
   background-repeat: no-repeat !important;
-  background-position: right center !important;
+  background-position: left center !important;
   background-size: cover !important;
   filter: none !important;
   -webkit-filter: none !important;
+  transform: scaleX(-1) !important; /* mirror: dense lines now on the right */
   opacity: 0.14 !important;
-  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 10%, rgba(0, 0, 0, 0.25) 42%, transparent 70%) !important;
-  mask-image: linear-gradient(to left, #000 0%, #000 10%, rgba(0, 0, 0, 0.25) 42%, transparent 70%) !important;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 10%, rgba(0, 0, 0, 0.25) 42%, transparent 70%) !important;
+  mask-image: linear-gradient(to right, #000 0%, #000 10%, rgba(0, 0, 0, 0.25) 42%, transparent 70%) !important;
 }
 :root[data-bs-theme='light'] body::before {
   background-image: url("/assets/img/topo-bg.svg") !important;
