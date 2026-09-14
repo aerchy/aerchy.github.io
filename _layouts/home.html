@@ -47,19 +47,6 @@ refactor: true
   {% endfor %}
 {% endif %}
 
-<!-- ===== Magazine masthead ===== -->
-<header id="mag-masthead">
-  <div class="mast-line">
-    <span class="mast-tag">// archy.sec</span>
-    <span class="mast-rule"></span>
-    <span class="mast-count">{{ site.posts | size }} writeups indexed</span>
-  </div>
-  <h1 class="mast-title">Security Writeups</h1>
-  <p class="mast-sub">Hack The Box · Active Directory · CVE exploitation</p>
-</header>
-
-{% assign feature = posts | first %}
-
 <div id="mag-grid" class="flex-grow-1">
   {% for post in posts %}
     <!-- derive machine metadata from the title -->
@@ -96,7 +83,6 @@ refactor: true
         {% if src != '' %}
           <div class="row-thumb">
             <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">
-            <span class="row-index">{{ idx }}</span>
           </div>
         {% endif %}
         <div class="row-body">
