@@ -1151,8 +1151,7 @@ pre,
     background: var(--pill-bg) !important;
     border: 1px solid var(--pill-border) !important;
     overflow: hidden;
-    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.3s ease,
-      border-radius 0.3s ease, top 0.35s ease, background 0.3s ease;
+    transition: none !important;
   }
   #topbar-wrapper search i {
     color: var(--accent) !important;
@@ -1166,7 +1165,7 @@ pre,
 
   /* expanded overlay state */
   body.search-open #topbar-wrapper search {
-    top: 16vh;
+    top: 32vh;
     left: 50%;
     right: auto;
     transform: translateX(-50%);
@@ -1194,7 +1193,7 @@ pre,
   }
   body.search-open #search-result-wrapper {
     position: fixed;
-    top: calc(16vh + 74px);
+    top: calc(32vh + 74px);
     left: 50%;
     transform: translateX(-50%);
     width: min(660px, 88vw);

@@ -3,6 +3,7 @@ title: "HTB - Jeeves (Medium | Windows | Web)"
 date: 2026-09-13 00:00:00 +0000
 categories: [HackTheBox, Web]
 tags: [htb, jenkins, jetty, gobuster, psexec, windows, keepass, ads, rce, groovy, pass-the-hash, credential-extraction, iis, smb]
+description: "Unauthenticated Jenkins Groovy RCE, then KeePass cracking & pass-the-hash to Administrator"
 image:
   path: /assets/img/jeeves-1200x600.gif
 ---

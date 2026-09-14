@@ -3,6 +3,7 @@ title: "HTB - Postman (Easy | Linux | Web)"
 date: 2026-09-13 00:00:00 +0000
 categories: [HackTheBox, Web]
 tags: [htb, cve-2019-12840, webmin, redis, rce, ssh, ssh-key-cracking, john, linpeas, metasploit]
+description: "Redis unauth access & SSH key cracking, then Webmin CVE-2019-12840 to root"
 image:
   path: https://i.pinimg.com/originals/f1/eb/a0/f1eba09749f72888d17f62c3ae0c7e7e.gif
 ---
