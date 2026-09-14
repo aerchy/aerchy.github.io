@@ -313,14 +313,31 @@ body::after {
   -webkit-mask-image: linear-gradient(to right, #000 0%, #000 8%, transparent 46%);
   mask-image: linear-gradient(to right, #000 0%, #000 8%, transparent 46%);
 }
-@media (max-width: 1600px) {
-  body::after { opacity: 0.3; }
+/* ---- Topographic contour background (replaces the ASCII code-wall + triangle):
+   white iso-lines on black, dense on the left, dissolving toward the right so
+   the reading column stays clear. Elegant thin lines — no blur needed. ---- */
+body::before {
+  background-image: url("/assets/img/topo-bg.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: left center !important;
+  background-size: cover !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 0.5 !important;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 20%, rgba(0, 0, 0, 0.4) 58%, transparent 88%) !important;
+  mask-image: linear-gradient(to right, #000 0%, #000 20%, rgba(0, 0, 0, 0.4) 58%, transparent 88%) !important;
 }
-@media (max-width: 1400px) {
-  body::after { opacity: 0.22; }
+:root[data-bs-theme='light'] body::before {
+  background-image: url("/assets/img/topo-bg.svg") !important;
+  filter: invert(1) !important; /* dark lines on light bg */
+  opacity: 0.22 !important;
+}
+/* the old code-wall layer is retired */
+body::after {
+  display: none !important;
 }
 @media (max-width: 1199px) {
-  body::after { display: none; }
+  body::before { opacity: 0.3 !important; }
 }
 
 /* texture sits at z-index:-1, so content needs no stacking bump here
