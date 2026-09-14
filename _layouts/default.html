@@ -37,7 +37,20 @@ layout: compress
           <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 text-muted">
             <div class="access">
               {% include_cached update-list.html lang=lang %}
-              {% include_cached trending-tags.html lang=lang %}
+              {% if page.layout == 'post' and page.tags.size > 0 %}
+                <!-- on a post: show only this post's tags -->
+                <section id="post-tags">
+                  <h2 class="panel-heading">Tags</h2>
+                  <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+                    {% for tag_name in page.tags %}
+                      {% assign url = tag_name | slugify | url_encode | prepend: '/tags/' | append: '/' %}
+                      <a class="post-tag btn btn-outline-primary" href="{{ url | relative_url }}">{{ tag_name }}</a>
+                    {% endfor %}
+                  </div>
+                </section>
+              {% else %}
+                {% include_cached trending-tags.html lang=lang %}
+              {% endif %}
             </div>
 
             {% for _include in layout.panel_includes %}
