@@ -4,7 +4,7 @@ date: 2026-09-13 00:00:00 +0000
 categories: [HackTheBox, Active Directory]
 tags: [htb, kerberoasting, gmsa, esc3, esc15, ad-recycle-bin, adcs, writespn, addself, forcechangepassword, writeowner, shadow-credential, certipy, bloodyad, bloodhound, tombstone, active-directory]
 image:
-  path: https://i.pinimg.com/originals/89/fb/d3/89fbd31bc46ea14c6969992eff04af1d.gif
+  path: /assets/img/tombwatcher.png
 ---
 
 ## Reconnaissance Phase

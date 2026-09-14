@@ -234,15 +234,39 @@ a {
   --mono: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Consolas',
     ui-monospace, 'Roboto Mono', monospace;
   --accent: #1a1a1a; /* light-mode accent = near-black */
-  --brand: #7c6ef2; /* violet accent for CTAs / links */
-  --brand-soft: rgba(124, 110, 242, 0.16);
+  /* Monochrome only — primary black, secondary white, no blue */
+  --brand: #141414; /* light: primary = near-black */
+  --brand-soft: rgba(0, 0, 0, 0.07);
+  --on-brand: #ffffff; /* text/icon sitting on a solid brand fill */
+  --toc-highlight: #141414;
 }
 
 :root[data-bs-theme='dark'] {
   --accent: #e8e8e8; /* dark-mode accent = near-white */
+  --brand: #f0f0f0; /* dark: secondary = near-white */
+  --brand-soft: rgba(255, 255, 255, 0.1);
+  --on-brand: #0a0a0a;
+  --toc-highlight: #ffffff;
 }
 
-/* ---- Minimal matte background with a few subtle details ---- */
+/* Monochrome link hovers — override Chirpy's orange (#d2603a) accent so the
+   whole palette stays strictly black & white */
+.content a:not(.img-link):hover,
+.post-meta a:not([class]):hover,
+#page-category a:hover,
+#page-tag a:hover,
+#access-lastmod a:hover,
+#search-results a:hover,
+#footer a:hover,
+#topbar #breadcrumb a:hover,
+.post-tail-wrapper .license-wrapper > a:hover,
+.post-edit > a:hover {
+  color: var(--accent) !important;
+  border-bottom-color: var(--accent) !important;
+}
+
+/* ---- Matte black base: faint dot grid + a dotted triangle in the
+   bottom-right corner (monochrome, no colour) ---- */
 body::before {
   content: '';
   position: fixed;
@@ -250,41 +274,45 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background-image:
-    radial-gradient(circle at 12% 6%, rgba(124, 110, 242, 0.05), transparent 40%),
-    radial-gradient(circle at 90% 96%, rgba(124, 110, 242, 0.035), transparent 44%),
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20150%20200%22%20fill%3D%22none%22%3E%3Cstyle%3Etext%7Bfont-family%3A%27JetBrains%20Mono%27%2C%27Courier%20New%27%2Cmonospace%3Bfont-size%3A12px%3Bfill%3A%23fff%3Bletter-spacing%3A1px%7D%3C%2Fstyle%3E%3Ctext%20x%3D%22136%22%20y%3D%2216%22%20opacity%3D%220.8%22%3E%2C%2B%3C%2Ftext%3E%3Ctext%20x%3D%22129%22%20y%3D%2231%22%20opacity%3D%220.8%22%3E%2C%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%22122%22%20y%3D%2246%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%22115%22%20y%3D%2261%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%22108%22%20y%3D%2276%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%22101%22%20y%3D%2291%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%2294%22%20y%3D%22106%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%2287%22%20y%3D%22121%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%2280%22%20y%3D%22136%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%2273%22%20y%3D%22151%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%2266%22%20y%3D%22166%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%2259%22%20y%3D%22181%22%20opacity%3D%220.8%22%3E%2C%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3C%2Fsvg%3E"),
     radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 32px 32px;
-  background-position: center;
+  background-repeat: no-repeat, repeat;
+  background-position: right 2.2rem bottom 2.4rem, center;
+  background-size: 150px auto, 32px 32px;
 }
 
 :root[data-bs-theme='light'] body::before {
-  background-image:
-    radial-gradient(circle at 12% 6%, rgba(124, 110, 242, 0.07), transparent 40%),
-    radial-gradient(circle at 90% 96%, rgba(124, 110, 242, 0.05), transparent 44%),
-    radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-repeat: repeat;
+  background-position: center;
+  background-size: 32px 32px;
 }
 
-/* ---- Left "code wall": faint terminal/recon art anchored to the left gutter.
-   Grey ink reads on both themes; masked so it dissolves into the matte bg
-   (integrated, not a bolted-on graphic). Purely decorative, fixed, no events. */
+/* ---- Left "code wall": the reference ASCII art, white on black, anchored to
+   the left gutter and masked so it dissolves before reaching the content.
+   Purely decorative, fixed, never captures pointer events. ---- */
 body::after {
   content: '';
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 300px;
+  width: 640px;
   z-index: -1;
   pointer-events: none;
+  opacity: 0.8;
   background-repeat: no-repeat;
-  background-position: left 90px;
-  background-size: 300px auto;
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20300%20860%22%20fill%3D%22none%22%3E%20%3Cstyle%3Etext%7Bfont-family%3A%27JetBrains%20Mono%27%2C%27Cascadia%20Code%27%2Cmonospace%3Bfont-size%3A10.5px%3Bfill%3A%239aa0aa%7D%3C%2Fstyle%3E%20%3Cg%3E%20%3Ctext%20x%3D%2214%22%20y%3D%2226%22%20opacity%3D%220.16%22%3E%24%20nmap%20-p-%20--min-rate%205000%2010.10.11.5%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%2249%22%20opacity%3D%220.09%22%3EPORT%20%20%20%20%20STATE%20%20SERVICE%20%20%20%20%20%20VERSION%3C%2Ftext%3E%20%3Crect%20x%3D%2214%22%20y%3D%2260%22%20width%3D%22150%22%20height%3D%2211%22%20fill%3D%22%23c7ccd4%22%20opacity%3D%220.14%22%2F%3E%20%3Ctext%20x%3D%2214%22%20y%3D%2295%22%20opacity%3D%220.13%22%3E22%2Ftcp%20%20%20open%20%20%20ssh%20%20%20%20%20%20%20%20%20%20OpenSSH%208.2%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22118%22%20opacity%3D%220.10%22%3E80%2Ftcp%20%20%20open%20%20%20http%20%20%20%20%20%20%20%20%20nginx%201.18%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22141%22%20opacity%3D%220.12%22%3E445%2Ftcp%20%20open%20%20%20microsoft-ds%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22176%22%20opacity%3D%220.15%22%3E%26gt%3B%20enumerating%20shares%20...%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22199%22%20opacity%3D%220.09%22%3E%5B%2B%5D%20IPC%24%20%20%20%20%20%20READ%3C%2Ftext%3E%20%3Crect%20x%3D%2214%22%20y%3D%22210%22%20width%3D%2296%22%20height%3D%2211%22%20fill%3D%22%23c7ccd4%22%20opacity%3D%220.12%22%2F%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22245%22%20opacity%3D%220.11%22%3E%5B%2B%5D%20backup%20%20%20%20READ%2CWRITE%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22268%22%20opacity%3D%220.07%22%3Edrwxr-xr-x%20%204%20root%20root%204096%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22291%22%20opacity%3D%220.14%22%3E%24%20evil-winrm%20-i%2010.10.11.5%20-u%20svc%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22326%22%20opacity%3D%220.10%22%3E0x7ffde4a1%20%20push%20%20%20rbp%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22349%22%20opacity%3D%220.08%22%3E0x7ffde4a2%20%20mov%20%20%20%20rbp%2C%20rsp%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22372%22%20opacity%3D%220.12%22%3E0x7ffde4a5%20%20call%20%20%20system%40plt%3C%2Ftext%3E%20%3Crect%20x%3D%2214%22%20y%3D%22383%22%20width%3D%22128%22%20height%3D%2211%22%20fill%3D%22%23c7ccd4%22%20opacity%3D%220.13%22%2F%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22418%22%20opacity%3D%220.15%22%3E%5B%2A%5D%20shell%3A%20uid%3D0%28root%29%20gid%3D0%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22441%22%20opacity%3D%220.09%22%3E%26gt%3B%20whoami%20%2Fpriv%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22464%22%20opacity%3D%220.11%22%3ESeImpersonatePrivilege%20%20Enabled%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22499%22%20opacity%3D%220.10%22%3E%24%20hashcat%20-m%201000%20ntlm.txt%20rock%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22522%22%20opacity%3D%220.13%22%3Ee0fb1fb85756c24235ff238cbe81fe00%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22545%22%20opacity%3D%220.07%22%3ERecovered%3A%201%2F1%20%20%28100.00%25%29%3C%2Ftext%3E%20%3Crect%20x%3D%2214%22%20y%3D%22556%22%20width%3D%2272%22%20height%3D%2211%22%20fill%3D%22%23c7ccd4%22%20opacity%3D%220.12%22%2F%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22591%22%20opacity%3D%220.12%22%3E%26gt%3B%20exfil%20%2Fetc%2Fshadow%20-%26gt%3B%20loot%2F%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22614%22%20opacity%3D%220.09%22%3Esha256%3A%209f8b1c...a4c2e1d0%3C%2Ftext%3E%20%3Ctext%20x%3D%2214%22%20y%3D%22637%22%20opacity%3D%220.11%22%3E%5B%2B%5D%20flag%20captured%3C%2Ftext%3E%20%3C%2Fg%3E%20%3Cg%20stroke%3D%22%239aa0aa%22%20stroke-width%3D%221%22%20opacity%3D%220.16%22%20stroke-dasharray%3D%221%206%22%20stroke-linecap%3D%22round%22%3E%20%3Cpath%20d%3D%22M40%20812%20L232%20812%20L40%20690%20Z%22%2F%3E%20%3Cpath%20d%3D%22M40%20812%20L136%20690%22%2F%3E%20%3Cpath%20d%3D%22M136%20812%20L136%20751%22%2F%3E%20%3C%2Fg%3E%20%3Cg%20stroke%3D%22%239aa0aa%22%20stroke-width%3D%221%22%20opacity%3D%220.07%22%3E%20%3Cline%20x1%3D%2214%22%20y1%3D%22662%22%20x2%3D%22232%22%20y2%3D%22662%22%2F%3E%20%3C%2Fg%3E%20%3C%2Fsvg%3E");
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 94%);
-  mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 94%);
+  background-position: left 72px;
+  background-size: 640px auto;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%201248%22%20fill%3D%22none%22%3E%3Cstyle%3Etext%7Bfont-family%3A%27JetBrains%20Mono%27%2C%27Cascadia%20Code%27%2C%27Courier%20New%27%2Cmonospace%3Bfont-size%3A13.0px%3Bfill%3A%23fff%3Bwhite-space%3Apre%7D%3C%2Fstyle%3E%3Ctext%20x%3D%2214%22%20y%3D%2220%22%20opacity%3D%220.85%22%3E%2B%2B%2B%2B%2B%2B%2B%2B%2A%2A%2B%2A%2B%2B%2B%2A%2A%2B%2A%2A%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%2241%22%20opacity%3D%220.8%22%3E%2A%2B%2B%2A%25%3A6%40%23%2A%2A%2B%3A%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%2262%22%20opacity%3D%220.8%22%3Ec7Z8%25%3A6%40%23QW%5E%2A%2B%3D%3D--%3A%3B%3A%21%5E%22%5E%3B%5E%5Eq%2F~q%2F%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%2283%22%20opacity%3D%220.8%22%3E%3A9%238%2B%25QW%40%5E%2A%3D%3D%3D--%3A%3B%3A%3B7x~%2C%5E%2F~-%5C%7C%2F%7C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22125%22%20opacity%3D%220.8%22%3E3%3F%3F%3A%3B%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22146%22%20opacity%3D%220.8%22%3Ec%3B7%2B%3F%25%5E%20%20%2C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22167%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%3B8%23%40%40%5E%2F%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22188%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%3B8%23%23QW%40%5E%2A%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22209%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3B%3B%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22251%22%20opacity%3D%220.8%22%3E4%247%2B3%238%25QW%40%5E%2A%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22272%22%20opacity%3D%220.8%22%3E%3A%3B%2B%2A7QW%40%5E%2F%5C%7C%5C%3B%3B%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22293%22%20opacity%3D%220.8%22%3E%3B%3B7%2B%2A9%23%40%5E%2F%5C%7C%5C%3B%3B%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22314%22%20opacity%3D%220.8%22%3E%3A9%238%2B%25QWQ%40%5E%2A%3D%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22335%22%20opacity%3D%220.8%22%3E%3A%3B%2B%2A7QW%40%5E%2F%5C%7C%5C%3B%3B%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22356%22%20opacity%3D%220.8%22%3E%3A7%2B%2A%3FW%40%5E%2A%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22377%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22398%22%20opacity%3D%220.8%22%3E%3A7%3F%2B%2AQW%40%5E%2A%3D%3D--%3A%2C--%3A%3B%2C..%3B%7C%3A~%5E%5E%5C%2F%5C%3B%3B...%5B%5D%7B%7D%26lt%3B%26gt%3B%7C%5C%5C%7C%7C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22419%22%20opacity%3D%220.85%22%3E%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2A%2A%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22440%22%20opacity%3D%220.8%22%3E%3A7Z8%25%3A6%40%23QW%40%5E%2A%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22461%22%20opacity%3D%220.8%22%3E%3A9%238%2B%25QW%40%5E%2A%3D%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22482%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22503%22%20opacity%3D%220.8%22%3E%3A7%3F%2B7QW%40%5E%2A%3D%3D--%3A%3B%2C..%2C%3B%7C%3A~%5E%5E%5C%2F%5C%3B%3B...%5B%5D%7B%7D%26lt%3B%26gt%3B%7C%5C%5C%7C%7C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22545%22%20opacity%3D%220.8%22%3E%3A7Z8%25%3A6%40%23QW%40%5E%2A%2B%3D--%3A%3B%2C%2C..%2C%3B%7C%3A~%5E%5E%5C%2F%5C%3B%3B...%5B%5D%7B%7D%26lt%3B%26gt%3B%7C%5C%5C%7C%7C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22566%22%20opacity%3D%220.85%22%3E%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2A%2A%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22587%22%20opacity%3D%220.8%22%3E%3A9%238%2B%25QW%40%5E%2A%3D%3D%3D-%3A--%3A%3B%2F%2Bl%26gt%3B%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22608%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22650%22%20opacity%3D%220.8%22%3E%3A7%2B%2A7QW%40%5E%2F%5C%7C%5C%3B%3B%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22671%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2A%3D%3D--%3A%3B%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22692%22%20opacity%3D%220.8%22%3E%3A7Z8%25%3A6%40%23QW%40%5E%2A%2B%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22734%22%20opacity%3D%220.8%22%3E%3A7Z8%25%3A6%40%23QW%40%5E%2A%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22755%22%20opacity%3D%220.8%22%3E%3A9%238%2B%25QW%40%5E%2A%3D%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22776%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22797%22%20opacity%3D%220.8%22%3E%3A7%2B%2A7QQW%40%5E%2A%3D%3D--%3A%3B%2C%2C.%2C%3B%7C%3A~%5E%5E%5C%2F%5C%3B%3B...%5B%5D%7B%7D%26lt%3B%26gt%3B%7C%5C%5C%7C%7C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22818%22%20opacity%3D%220.8%22%3E%3A9%238%2B%25QW%40%5E%2A%3D%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22839%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22881%22%20opacity%3D%220.8%22%3E%3A7Z8%25%3A6%40%23QW%40%5E%2A%3D%3D-%3A%3B%2C%2C.%2C%3B%7C%3A~%5E%5E%5C%2F%5C%3B%3B...%5B%5D%7B%7D%26lt%3B%26gt%3B%7C%5C%5C%7C%7C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22902%22%20opacity%3D%220.85%22%3E%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22944%22%20opacity%3D%220.8%22%3E%3A7%2B%2AQW%40%5E%2A%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%22965%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%221007%22%20opacity%3D%220.8%22%3Ec7Z8%25%3A6%40%23QW%40o%2A%3D%3D--%2A%3A%3B%2C%3B~-%2C%3B%7C%3A~%5E%5E%5C%2F%27%5C%3B%3B...%5B%5D%7B%7D%26lt%3B%26gt%3B%7C%5C%5CW%3C%2Ftext%3E%3Crect%20x%3D%2214%22%20y%3D%221017%22%20width%3D%22470%22%20height%3D%2215%22%20fill%3D%22%23fff%22%20opacity%3D%220.92%22%2F%3E%3Ctext%20x%3D%2214%22%20y%3D%221049%22%20opacity%3D%220.8%22%3E%3A9%238%2B%25QW%40%5E%2A%3D%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%221070%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%221112%22%20opacity%3D%220.8%22%3E%3A7%2B%2A7QW%40%5E%2A%3D%3D%3D--%3A%3B%2C%2C..%2C%3B%7C%3A~%5E%5E%5C%2F%5C%3B%3B...%5B%5D%7B%7D%26lt%3B%26gt%3B%7C%5C%5C%7C%7C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%221133%22%20opacity%3D%220.8%22%3E%3A9%238%2B%25QW%40%5E%2A%3D%3D%3D--%3A%3B%2C%2C..%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%221154%22%20opacity%3D%220.8%22%3E%3A%3B7%2B%2AQW%40%5E%2F%5C%7C%5C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%221196%22%20opacity%3D%220.8%22%3E%3A7Z8%25%3A6%40%23QW%40o%2A%3D%3D--%3A%3B%2C%2C.%2C%3B%7C%3A~%5E%5E%5C%2F%5C%3B%3B...%5B%5D%7B%7D%26lt%3B%26gt%3B%7C%5C%5C%7C%7C%3C%2Ftext%3E%3Ctext%20x%3D%2214%22%20y%3D%221217%22%20opacity%3D%220.85%22%3E%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%2B%3C%2Ftext%3E%3Crect%20x%3D%22150%22%20y%3D%22576%22%20width%3D%22300%22%20height%3D%2215%22%20fill%3D%22%23fff%22%20opacity%3D%220.92%22%2F%3E%3C%2Fsvg%3E");
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 15%, transparent 56%);
+  mask-image: linear-gradient(to right, #000 0%, #000 15%, transparent 56%);
 }
-@media (max-width: 1500px) {
-  body::after { opacity: 0.55; }
+@media (max-width: 1600px) {
+  body::after { opacity: 0.6; }
+}
+@media (max-width: 1400px) {
+  body::after { opacity: 0.42; }
 }
 @media (max-width: 1199px) {
   body::after { display: none; }
@@ -867,6 +895,24 @@ pre,
   animation: fade-in 0.5s ease both;
 }
 
+/* ---- Progressive scroll reveal for post content ----
+   Each block fades/rises as it scrolls into view. Uses scroll-driven
+   animations where supported (Chromium); elsewhere content renders normally,
+   so nothing is ever left hidden. */
+@keyframes post-reveal {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@supports (animation-timeline: view()) {
+  article .content > :is(p, h2, h3, h4, ul, ol, pre, blockquote, img,
+    figure, .highlight, .highlighter-rouge, table, hr, details) {
+    animation: post-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 4% cover 18%;
+    will-change: opacity, transform;
+  }
+}
+
 /* ============================================================
    ARCHITECTURE OVERRIDE (desktop ≥1200px)
    Turn Chirpy's fixed left sidebar into a horizontal top nav bar,
@@ -1192,9 +1238,9 @@ pre,
   align-items: center;
   gap: 0.5rem;
   background: var(--brand);
-  color: #fff !important;
+  color: var(--on-brand) !important;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   padding: 0.7rem 1.35rem;
   border-radius: 30px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -1202,7 +1248,7 @@ pre,
 }
 .lh-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 26px rgba(124, 110, 242, 0.4);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
 }
 .lh-arrow { transition: transform 0.25s ease; }
 .lh-btn:hover .lh-arrow { transform: translateX(3px); }
@@ -1523,8 +1569,10 @@ pre,
   .profile-wrapper,
   #panel-wrapper .access section,
   #panel-wrapper .access > div,
-  #core-wrapper > .post {
-    animation: none;
-    opacity: 1;
+  #core-wrapper > .post,
+  article .content > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
