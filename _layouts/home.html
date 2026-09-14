@@ -92,16 +92,18 @@ refactor: true
     {% endif %}
 
     <!-- ============ VERTICAL CARD ============ -->
-    <article class="v-card">
+    <article class="v-card{% if post.pin %} is-pinned{% endif %}">
       <a href="{{ post.url | relative_url }}" class="v-link">
         {% if src != '' %}
           <div class="v-thumb">
             <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">
             {% if os != '' %}<span class="v-cat os-{{ os_slug }}">{{ os }}</span>{% endif %}
+            {% if post.pin %}<span class="v-pin">Pinned</span>{% endif %}
           </div>
         {% endif %}
         <div class="v-body">
           <div class="v-meta">
+            {% if post.pin and src == '' %}<span class="v-pin-inline">Pinned</span>{% endif %}
             <span class="v-author">{{ post.author | default: site.social.name | default: 'archy' }}</span>
             <span class="v-dot">&bull;</span>
             <span class="v-date">{% include datetime.html date=post.date lang=lang %}</span>
