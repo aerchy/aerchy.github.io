@@ -323,21 +323,21 @@ body::before {
   background-size: cover !important;
   filter: none !important;
   -webkit-filter: none !important;
-  opacity: 0.5 !important;
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 20%, rgba(0, 0, 0, 0.4) 58%, transparent 88%) !important;
-  mask-image: linear-gradient(to right, #000 0%, #000 20%, rgba(0, 0, 0, 0.4) 58%, transparent 88%) !important;
+  opacity: 0.14 !important;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 10%, rgba(0, 0, 0, 0.25) 42%, transparent 70%) !important;
+  mask-image: linear-gradient(to right, #000 0%, #000 10%, rgba(0, 0, 0, 0.25) 42%, transparent 70%) !important;
 }
 :root[data-bs-theme='light'] body::before {
   background-image: url("/assets/img/topo-bg.svg") !important;
   filter: invert(1) !important; /* dark lines on light bg */
-  opacity: 0.22 !important;
+  opacity: 0.1 !important;
 }
 /* the old code-wall layer is retired */
 body::after {
   display: none !important;
 }
 @media (max-width: 1199px) {
-  body::before { opacity: 0.3 !important; }
+  body::before { opacity: 0.09 !important; }
 }
 
 /* texture sits at z-index:-1, so content needs no stacking bump here
