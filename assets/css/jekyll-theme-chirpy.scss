@@ -1790,12 +1790,12 @@ mark.search-hl {
 
 /* 3) 3D tilt on home cards */
 .v-card.tilt-on {
-  /* transition is managed inline by anim.js: 0s while following the cursor,
-     0.35s ease only on leave — so the card no longer "snaps" back weirdly.
-     No preserve-3d and no permanent will-change/backface layer promotion:
-     those force a compositor texture that gets rasterized at 1x on HiDPI
-     screens, making the covers look pixelated. Keep the card on the normal
-     layer so images render at full device resolution. */
+  /* One uniform, gentle easing for open, follow and close so the card never
+     snaps or "refreshes". will-change is toggled by anim.js only during hover
+     (layer promoted before the transform, dropped after the ease-back), so the
+     covers stay crisp at rest — no permanent layer, no HiDPI pixelation, and
+     no preserve-3d texture. */
+  transition: transform 0.25s ease-out;
 }
 
 /* 4) Back-to-top scroll-progress ring */

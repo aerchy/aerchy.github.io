@@ -92,9 +92,12 @@
 
     cards.forEach(function (card) {
       var frame = null;
+      var settle = null;
       function onEnter() {
-        // follow the cursor instantly while hovering (no lag)
-        card.style.transition = 'transform 0s';
+        // Promote to its own compositor layer BEFORE any transform is applied,
+        // so the image doesn't re-rasterize (flash) on the first move.
+        if (settle) { clearTimeout(settle); settle = null; }
+        card.style.willChange = 'transform';
       }
       function onMove(e) {
         var r = card.getBoundingClientRect();
@@ -112,9 +115,11 @@
       function onLeave() {
         if (frame) cancelAnimationFrame(frame);
         frame = null;
-        // smooth, single ease back to the resting position
-        card.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
         card.style.transform = '';
+        // drop the layer only AFTER the ease-back finishes, so leaving doesn't
+        // re-rasterize mid-animation (which looked like a refresh)
+        if (settle) clearTimeout(settle);
+        settle = setTimeout(function () { card.style.willChange = 'auto'; }, 320);
       }
       card.addEventListener('pointerenter', onEnter);
       card.addEventListener('pointermove', onMove, { passive: true });
