@@ -1789,9 +1789,12 @@ body.is-leaving {
   -webkit-backdrop-filter: blur(6px);
   opacity: 0;
   visibility: hidden;
+  /* never capture clicks while closed — otherwise a stuck/animating overlay
+     silently blocks the whole page (magnifier included) and search "breaks" */
+  pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-body.search-open #search-overlay { opacity: 1; visibility: visible; }
+body.search-open #search-overlay { opacity: 1; visibility: visible; pointer-events: auto; }
 
 /* highlighted match inside search snippets */
 mark.search-hl {
