@@ -18,28 +18,6 @@ layout: compress
   {% include head.html lang=lang %}
 
   <body>
-    <!-- Minimal intro overlay — plays only on first arrival / refresh, not on
-         internal navigation. Decision runs inline (pre-paint) to avoid a flash. -->
-    <script>
-      (function () {
-        try {
-          var nav = performance.getEntriesByType('navigation')[0];
-          var type = nav ? nav.type : 'navigate';
-          var external = !document.referrer || document.referrer.indexOf(location.origin) !== 0;
-          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          if (!reduce && type !== 'back_forward' && (type === 'reload' || (type === 'navigate' && external))) {
-            document.documentElement.classList.add('intro-play');
-          }
-        } catch (e) {}
-      })();
-    </script>
-    <div id="intro" aria-hidden="true">
-      <div class="intro-inner">
-        <span class="intro-mark">&gt; archy</span>
-        <span class="intro-line"></span>
-      </div>
-    </div>
-
     {% include sidebar.html lang=lang %}
 
     <div id="main-wrapper" class="d-flex justify-content-center">
