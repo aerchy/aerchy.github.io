@@ -6,6 +6,23 @@
   'use strict';
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------------------------------------------------------------
+     0) Intro overlay cleanup — remove it once the reveal finishes so no
+        invisible layer is left behind (the animation itself is pure CSS)
+     --------------------------------------------------------------------- */
+  (function introCleanup() {
+    if (!document.documentElement.classList.contains('intro-play')) return;
+    var intro = document.getElementById('intro');
+    function done() {
+      if (intro && intro.parentNode) intro.parentNode.removeChild(intro);
+      document.documentElement.classList.remove('intro-play');
+    }
+    if (intro) intro.addEventListener('animationend', function (e) {
+      if (e.animationName === 'intro-out') done();
+    });
+    window.setTimeout(done, 2000); // safety fallback
+  })();
   var finePointer = window.matchMedia('(pointer: fine)').matches;
   var lerp = function (a, b, t) { return a + (b - a) * t; };
   var clamp = function (v, min, max) { return v < min ? min : v > max ? max : v; };
