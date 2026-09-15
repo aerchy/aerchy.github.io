@@ -1354,6 +1354,9 @@ pre,
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease;
+  /* keep the downscaled cover sharp under the card transform */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .v-card:hover .v-thumb img { transform: scale(1.05); }
 
@@ -1791,7 +1794,8 @@ mark.search-hl {
 /* 3) 3D tilt on home cards */
 .v-card.tilt-on {
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  transform-style: preserve-3d;
+  /* no preserve-3d: it rasterizes the card (image included) to a 1x texture,
+     which looks blurry on HiDPI screens. A flat tilt keeps images crisp. */
   will-change: transform;
 }
 
