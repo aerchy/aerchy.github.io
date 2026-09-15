@@ -39,8 +39,8 @@
         }
 
         if (prop === 'url') {
-          // deep-link straight to the searched word using a Text Fragment, so
-          // clicking a result scrolls to (and highlights) that exact sentence
+          /* deep-link straight to the searched word using a Text Fragment, so
+             clicking a result scrolls to (and highlights) that exact sentence */
           const input = document.getElementById('search-input');
           const q = (input && input.value ? input.value : '').trim();
           if (!q) return value;
