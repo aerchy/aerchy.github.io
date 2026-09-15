@@ -129,7 +129,7 @@ Investigating the mounted share reveals several user profile directories. The us
 
 ![](/assets/img/vulncicada/Pasted_image_20260913192859.png)
 
-Within the photo, a notepad window is visible containing a potential password: **Cicada123**
+Within a notepad, a potential password is visible: **Cicada123**
 
 ### Credential Validation
 
