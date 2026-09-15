@@ -92,6 +92,10 @@
 
     cards.forEach(function (card) {
       var frame = null;
+      function onEnter() {
+        // follow the cursor instantly while hovering (no lag)
+        card.style.transition = 'transform 0s';
+      }
       function onMove(e) {
         var r = card.getBoundingClientRect();
         var px = (e.clientX - r.left) / r.width;   // 0..1
@@ -107,8 +111,12 @@
       }
       function onLeave() {
         if (frame) cancelAnimationFrame(frame);
+        frame = null;
+        // smooth, single ease back to the resting position
+        card.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
         card.style.transform = '';
       }
+      card.addEventListener('pointerenter', onEnter);
       card.addEventListener('pointermove', onMove, { passive: true });
       card.addEventListener('pointerleave', onLeave);
       card.classList.add('tilt-on');

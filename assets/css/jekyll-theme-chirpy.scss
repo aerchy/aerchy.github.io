@@ -1790,8 +1790,9 @@ mark.search-hl {
 
 /* 3) 3D tilt on home cards */
 .v-card.tilt-on {
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  /* No preserve-3d and no permanent will-change/backface layer promotion:
+  /* transition is managed inline by anim.js: 0s while following the cursor,
+     0.35s ease only on leave — so the card no longer "snaps" back weirdly.
+     No preserve-3d and no permanent will-change/backface layer promotion:
      those force a compositor texture that gets rasterized at 1x on HiDPI
      screens, making the covers look pixelated. Keep the card on the normal
      layer so images render at full device resolution. */
