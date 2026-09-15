@@ -29,6 +29,9 @@
       var href = a.getAttribute('href');
       if (!href) return false;
       if (href[0] === '#') return false;
+      // let the browser handle Text Fragment links natively (search results),
+      // otherwise the :~:text= highlight/scroll gets dropped
+      if (href.indexOf(':~:') !== -1) return false;
       if (/^(mailto:|tel:|javascript:)/i.test(href)) return false;
       var url;
       try { url = new URL(a.href, location.href); } catch (e) { return false; }
