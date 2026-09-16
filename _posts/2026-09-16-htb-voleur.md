@@ -2,7 +2,7 @@
 title: "HTB - Voleur (Medium | Windows | Active Directory)"
 date: 2026-09-16 12:00:00 +0000
 categories: [HackTheBox, Active Directory]
-tags: [htb, windows, active-directory, bloodhound, netexec, smbclient, kerberos, office2john, john, dpapi, wsl, secretsdump, kerberoasting, kinit, evil-winrm, targeted-kerberoasting, runascs, msfvenom, meterpreter, scp, ad-recycle-bin, ntds-dit, writespn, nxc]
+tags: [htb, windows, active-directory, bloodhound, netexec, smbclient, kerberos, office2john, john, dpapi, wsl, secretsdump, kerberoasting, kinit, evil-winrm, targeted-kerberoasting, runascs, msfvenom, meterpreter, scp, ad-recycle-bin, ntds-dit, writespn, nxc, metasploit]
 description: "Crack a protected Excel for creds, then targeted Kerberoasting, DPAPI & AD Recycle Bin abuse to NTDS.dit for Domain Admin"
 image:
   path: /assets/img/voleur.png
