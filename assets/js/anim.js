@@ -59,32 +59,6 @@
   })();
 
   /* ---------------------------------------------------------------------
-     2) Cursor glow — soft monochrome spotlight following the pointer
-     --------------------------------------------------------------------- */
-  (function cursorGlow() {
-    var el = document.getElementById('cursor-glow');
-    if (!el || reduce || !finePointer) return;
-
-    var tx = window.innerWidth / 2, ty = window.innerHeight / 2;
-    var x = tx, y = ty, shown = false, raf = null;
-
-    function loop() {
-      x = lerp(x, tx, 0.14);
-      y = lerp(y, ty, 0.14);
-      el.style.transform = 'translate3d(' + (x - 250) + 'px,' + (y - 250) + 'px,0)';
-      raf = requestAnimationFrame(loop);
-    }
-    window.addEventListener('pointermove', function (e) {
-      tx = e.clientX; ty = e.clientY;
-      if (!shown) { shown = true; el.classList.add('is-on'); }
-      if (!raf) loop();
-    }, { passive: true });
-    document.addEventListener('mouseleave', function () {
-      el.classList.remove('is-on');
-    });
-  })();
-
-  /* ---------------------------------------------------------------------
      3) Subtle 3D tilt on the home cards (parallax toward the cursor)
      --------------------------------------------------------------------- */
   (function cardTilt() {
