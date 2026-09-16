@@ -169,13 +169,12 @@ localc Access_Review.xlsx &
 
 ![](/assets/img/voleur/Pasted_image_20260915194100.png)
 
-Multiple credentials are discovered within the spreadsheet:
-
-![](/assets/img/voleur/Pasted_image_20260915195430.png)
+Multiple credentials are discovered within the spreadsheet, save all credentials:
 
 ---
 
 ## **User**
+![](/assets/img/voleur/Pasted_image_20260916130159.png)
 
 ### Targeted Kerberoasting Attack
 
