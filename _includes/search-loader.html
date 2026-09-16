@@ -38,15 +38,6 @@
           return value === '' ? `${value}` : `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
         }
 
-        if (prop === 'url') {
-          /* deep-link straight to the searched word using a Text Fragment, so
-             clicking a result scrolls to (and highlights) that exact sentence */
-          const input = document.getElementById('search-input');
-          const q = (input && input.value ? input.value : '').trim();
-          if (!q) return value;
-          return value + '#:~:text=' + encodeURIComponent(q);
-        }
-
         if (prop === 'content') {
           const input = document.getElementById('search-input');
           const q = (input && input.value ? input.value : '').trim();
@@ -70,5 +61,38 @@
         }
       }
     });
+
+    /* Jump to the exact spot in the POST BODY (not the header description).
+       We build the Text Fragment from the result's own snippet — a short
+       phrase of real body text — so it never lands on the short description,
+       which appears first in the page and would otherwise win the match. */
+    const results = document.getElementById('search-results');
+    if (results) {
+      results.addEventListener('click', function (e) {
+        const a = e.target.closest && e.target.closest('a[href]');
+        if (!a) return;
+        const art = a.closest('article');
+        const p = art && art.querySelector('p');
+        const mark = p && p.querySelector('mark');
+        if (!mark) return;
+        /* phrase = matched word + a few following words from the snippet */
+        let after = '';
+        let n = mark.nextSibling;
+        while (n && after.length < 40) {
+          after += (n.textContent || '');
+          n = n.nextSibling;
+        }
+        after = after.replace(/…/g, ' ').replace(/\s+/g, ' ');
+        const tail = after.trim().split(' ').slice(0, 5).join(' ');
+        let phrase = (mark.textContent || '').trim();
+        if (tail) phrase += ' ' + tail;
+        phrase = phrase.replace(/\s+/g, ' ').trim();
+        if (!phrase) return;
+        let url;
+        try { url = new URL(a.href, location.href); } catch (err) { return; }
+        e.preventDefault();
+        location.href = url.pathname + url.search + '#:~:text=' + encodeURIComponent(phrase);
+      });
+    }
   });
 </script>
