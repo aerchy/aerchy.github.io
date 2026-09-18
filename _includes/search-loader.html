@@ -83,15 +83,26 @@
           n = n.nextSibling;
         }
         after = after.replace(/…/g, ' ').replace(/\s+/g, ' ');
-        const tail = after.trim().split(' ').slice(0, 5).join(' ');
-        let phrase = (mark.textContent || '').trim();
-        if (tail) phrase += ' ' + tail;
-        phrase = phrase.replace(/\s+/g, ' ').trim();
-        if (!phrase) return;
+        const word = (mark.textContent || '').trim();
+        if (!word) return;
+        const tail = after.trim().split(' ').filter(Boolean).slice(0, 2);
         let url;
         try { url = new URL(a.href, location.href); } catch (err) { return; }
-        e.preventDefault();
-        location.href = url.pathname + url.search + '#:~:text=' + encodeURIComponent(phrase);
+        /* Progressive Text Fragment directives, longest -> shortest. The browser
+           jumps to the FIRST that matches, so it lands on the most precise body
+           phrase that actually fits inside a single block, and falls back to the
+           bare word if the longer phrases cross a block boundary. This both
+           guarantees a jump and avoids the short header description. Update the
+           link's own href and let the NATIVE navigation run — Text Fragments
+           only activate on real link navigations, not script-initiated ones. */
+        const phrases = [];
+        if (tail.length >= 2) phrases.push(word + ' ' + tail[0] + ' ' + tail[1]);
+        if (tail.length >= 1) phrases.push(word + ' ' + tail[0]);
+        phrases.push(word);
+        const frag = '#:~:' + phrases.map(function (p) {
+          return 'text=' + encodeURIComponent(p);
+        }).join('&');
+        a.setAttribute('href', url.pathname + url.search + frag);
       });
     }
   });
