@@ -16,7 +16,7 @@
    Matte black glassmorphism design
    ============================================ */
 
-$glass-blur: 18px;
+$glass-blur: 8px;
 
 /* ---- Theme-aware glass variables (Chirpy uses data-bs-theme) ---- */
 /* Light */
@@ -317,21 +317,24 @@ body::after {
    white iso-lines on black, dense on the left, dissolving toward the right so
    the reading column stays clear. Elegant thin lines — no blur needed. ---- */
 body::before {
-  background-image: url("/assets/img/topo-bg.svg") !important;
+  /* Pre-rendered bitmap: the mirror + fade + opacity are baked into the WebP, so
+     Safari just blits a small image — no live SVG rasterization, no mask, no
+     filter, no transform layer. This is what fixed the Safari memory crash. */
+  background-image: url("/assets/img/topo-bg.webp") !important;
   background-repeat: no-repeat !important;
-  background-position: left center !important;
+  background-position: center right !important;
   background-size: cover !important;
   filter: none !important;
   -webkit-filter: none !important;
-  transform: scaleX(-1) !important; /* mirror: dense lines now on the right */
+  transform: none !important;
   opacity: 0.14 !important;
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 10%, rgba(0, 0, 0, 0.25) 42%, transparent 70%) !important;
-  mask-image: linear-gradient(to right, #000 0%, #000 10%, rgba(0, 0, 0, 0.25) 42%, transparent 70%) !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
 }
 :root[data-bs-theme='light'] body::before {
-  background-image: url("/assets/img/topo-bg.svg") !important;
-  filter: invert(1) !important; /* dark lines on light bg */
-  opacity: 0.1 !important;
+  background-image: url("/assets/img/topo-bg.webp") !important;
+  filter: none !important;
+  opacity: 0.08 !important;
 }
 /* the old code-wall layer is retired */
 body::after {
@@ -932,7 +935,9 @@ pre,
     animation: post-reveal linear both;
     animation-timeline: view();
     animation-range: entry 4% cover 18%;
-    will-change: opacity, transform;
+    /* NO will-change here: this selector matches hundreds of blocks on a long
+       post; promoting each to its own compositor layer exhausted GPU memory and
+       crashed Safari on Retina. Scroll-driven animations don't need it. */
   }
 }
 
@@ -961,8 +966,8 @@ pre,
     padding: 0 2.2rem !important;
     border-right: none !important;
     border-bottom: 1px solid var(--glass-border);
-    background: rgba(10, 10, 10, 0.72) !important;
-    backdrop-filter: blur(18px) saturate(140%);
+    background: rgba(10, 10, 10, 0.82) !important;
+    backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     z-index: 1000;
     overflow: visible !important;
@@ -1382,8 +1387,7 @@ pre,
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(10, 10, 10, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.16);
   color: #fff;
   font-family: var(--mono);
@@ -1438,8 +1442,7 @@ pre,
   right: 14px;
   z-index: 2;
   color: #fff;
-  background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(10, 10, 10, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.18);
   padding: 0.32rem 0.7rem;
   border-radius: 20px;
@@ -1601,7 +1604,7 @@ pre,
   background: var(--glass-bg) !important;
   border: 1px solid var(--glass-border) !important;
   border-radius: 16px !important;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
   overflow: hidden;
   transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
