@@ -2,7 +2,7 @@
 title: "HTB - Snoopy (Hard | Linux | Web)"
 date: 2026-09-19 12:00:00 +0000
 categories: [HackTheBox, Web]
-tags: [htb, linux, dns, ssh, bind, lfi, ffuf, mattermost, zone-transfer, python-aiosmtpd, python, git, xxe, clamscan, clamav, dns-poisoning, ssh-honeypot, cve-2023-23946, cve-2023-20052]
+tags: [htb, linux, dns, ssh, bind, lfi, ffuf, mattermost, zone-transfer, python-aiosmtpd, python, git, xxe, clamscan, clamav, dns-poisoning, ssh-honeypot, dmg, cve-2023-23946, cve-2023-20052]
 description: "DNS zone transfer & LFI to hijack a Mattermost password reset, then a git symlink CVE & ClamAV XXE (CVE-2023-20052) to root"
 image:
   path: /assets/img/snoopy.png
