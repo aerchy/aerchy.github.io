@@ -161,7 +161,7 @@ john excel.hash --wordlist=/usr/share/wordlists/rockyou.txt
 Install and use LibreOffice Calc to open the protected file:
 
 ```bash
-## Installation
+# Installation
 sudo apt update && sudo apt install libreoffice-calc -y
 
 localc Access_Review.xlsx &

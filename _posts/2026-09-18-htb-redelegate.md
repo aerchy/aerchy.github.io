@@ -159,13 +159,13 @@ print("Wordlist generated: wordlist.txt")
 `keepass2john` extracts the password hash from the KeePass database into a format John the Ripper can crack. We then use our generated season-year wordlist to crack it:
 
 ```bash
-## 1. Generate the wordlist
+# 1. Generate the wordlist
 python py.py
 
-## 2. Convert KeePass database to crackable hash
+# 2. Convert KeePass database to crackable hash
 keepass2john shared.kdbx > kp.hash
 
-## 3. Crack the hash with the custom wordlist
+# 3. Crack the hash with the custom wordlist
 john kp.hash --wordlist=wordlist.txt
 ```
 

