@@ -67,43 +67,25 @@
        phrase of real body text — so it never lands on the short description,
        which appears first in the page and would otherwise win the match. */
     const results = document.getElementById('search-results');
+    const searchInput = document.getElementById('search-input');
     if (results) {
-      results.addEventListener('click', function (e) {
-        const a = e.target.closest && e.target.closest('a[href]');
-        if (!a) return;
-        const art = a.closest('article');
-        const p = art && art.querySelector('p');
-        const mark = p && p.querySelector('mark');
-        if (!mark) return;
-        /* phrase = matched word + a few following words from the snippet */
-        let after = '';
-        let n = mark.nextSibling;
-        while (n && after.length < 40) {
-          after += (n.textContent || '');
-          n = n.nextSibling;
-        }
-        after = after.replace(/…/g, ' ').replace(/\s+/g, ' ');
-        const word = (mark.textContent || '').trim();
-        if (!word) return;
-        const tail = after.trim().split(' ').filter(Boolean).slice(0, 2);
-        let url;
-        try { url = new URL(a.href, location.href); } catch (err) { return; }
-        /* Progressive Text Fragment directives, longest -> shortest. The browser
-           jumps to the FIRST that matches, so it lands on the most precise body
-           phrase that actually fits inside a single block, and falls back to the
-           bare word if the longer phrases cross a block boundary. This both
-           guarantees a jump and avoids the short header description. Update the
-           link's own href and let the NATIVE navigation run — Text Fragments
-           only activate on real link navigations, not script-initiated ones. */
-        const phrases = [];
-        if (tail.length >= 2) phrases.push(word + ' ' + tail[0] + ' ' + tail[1]);
-        if (tail.length >= 1) phrases.push(word + ' ' + tail[0]);
-        phrases.push(word);
-        const frag = '#:~:' + phrases.map(function (p) {
-          return 'text=' + encodeURIComponent(p);
-        }).join('&');
-        a.setAttribute('href', url.pathname + url.search + frag);
-      });
+      /* Point each result at the post with the searched term in a query param
+         (?tfhl=). A script on the post page (anim.js) then finds the first match
+         INSIDE THE BODY (skipping the header description), scrolls to it and
+         highlights it. This is fully reliable across browsers — unlike native
+         Text Fragments, which land on the description, break across block
+         boundaries, and are flaky in Safari. */
+      function decorate() {
+        const q = (searchInput && searchInput.value ? searchInput.value : '').trim();
+        if (!q) return;
+        results.querySelectorAll('article a[href]').forEach(function (a) {
+          let url;
+          try { url = new URL(a.href, location.href); } catch (err) { return; }
+          a.setAttribute('href', url.pathname + '?tfhl=' + encodeURIComponent(q) + url.hash);
+        });
+      }
+      new MutationObserver(decorate).observe(results, { childList: true, subtree: true });
+      decorate();
     }
   });
 </script>

@@ -1777,6 +1777,23 @@ mark.search-hl {
   border-radius: 3px;
   font-weight: 700;
 }
+/* highlight for the word you jumped to from a search result */
+mark.search-jump {
+  background: #ffd43b;
+  color: #0a0a0a;
+  padding: 0 0.15em;
+  border-radius: 3px;
+  font-weight: 700;
+  box-shadow: 0 0 0 3px rgba(255, 212, 59, 0.35);
+  animation: search-jump-pulse 2.4s ease 0.2s 2;
+}
+@keyframes search-jump-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255, 212, 59, 0.35); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 212, 59, 0.55); }
+}
+@media (prefers-reduced-motion: reduce) {
+  mark.search-jump { animation: none; }
+}
 /* keep search result snippets to a single short line */
 #search-results > article > p {
   -webkit-line-clamp: 2;

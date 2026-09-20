@@ -11,6 +11,69 @@
   var clamp = function (v, min, max) { return v < min ? min : v > max ? max : v; };
 
   /* ---------------------------------------------------------------------
+     0) Search jump — when arriving from a search result (?tfhl=term), find the
+        first occurrence INSIDE the post body, scroll to it and highlight it.
+        Robust in every browser; never lands on the header description.
+     --------------------------------------------------------------------- */
+  (function searchJump() {
+    var m = /[?&]tfhl=([^&]+)/.exec(location.search);
+    if (!m) return;
+    var q = '';
+    try { q = decodeURIComponent(m[1].replace(/\+/g, ' ')).trim(); } catch (e) { return; }
+    if (!q) return;
+
+    function run() {
+      var content = document.querySelector('article .content') || document.querySelector('.content');
+      if (!content) return cleanUrl();
+      var ql = q.toLowerCase();
+      var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null);
+      var node, target = null, idx = -1;
+      while ((node = walker.nextNode())) {
+        // skip empty / code-copy button text nodes
+        var val = node.nodeValue;
+        if (!val) continue;
+        var i = val.toLowerCase().indexOf(ql);
+        if (i !== -1) { target = node; idx = i; break; }
+      }
+      if (!target) return cleanUrl();
+
+      var mark;
+      try {
+        var range = document.createRange();
+        range.setStart(target, idx);
+        range.setEnd(target, idx + q.length);
+        mark = document.createElement('mark');
+        mark.className = 'search-jump';
+        range.surroundContents(mark);
+      } catch (e) {
+        mark = target.parentElement; // fallback: whole element
+      }
+      if (!mark) return cleanUrl();
+
+      var y = mark.getBoundingClientRect().top + window.scrollY - 96;
+      window.scrollTo({ top: y < 0 ? 0 : y, behavior: reduce ? 'auto' : 'smooth' });
+      // re-align once images/webfonts settle, in case layout shifted
+      window.setTimeout(function () {
+        var y2 = mark.getBoundingClientRect().top + window.scrollY - 96;
+        if (Math.abs(y2 - window.scrollY) > 40) window.scrollTo({ top: y2 < 0 ? 0 : y2, behavior: 'auto' });
+      }, 600);
+      cleanUrl();
+    }
+
+    function cleanUrl() {
+      if (!history.replaceState) return;
+      var qs = location.search.replace(/([?&])tfhl=[^&]*(&|$)/, '$1').replace(/[?&]$/, '');
+      history.replaceState(null, '', location.pathname + qs + location.hash);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run);
+    } else {
+      run();
+    }
+  })();
+
+  /* ---------------------------------------------------------------------
      1) Page transition — fade out on internal navigation, fade in on load
      --------------------------------------------------------------------- */
   (function pageTransition() {
