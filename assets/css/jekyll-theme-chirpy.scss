@@ -1353,6 +1353,9 @@ pre,
   aspect-ratio: 16 / 10;
   margin-bottom: 1rem;
   border: 1px solid var(--glass-border);
+  /* placeholder so a not-yet-loaded / failed cover never shows as a harsh
+     black block (notably on Safari) */
+  background: linear-gradient(135deg, #1a1a1a, #101010);
 }
 .v-thumb img {
   width: 100%;
@@ -1362,16 +1365,19 @@ pre,
 }
 .v-card:hover .v-thumb img { transform: scale(1.05); }
 
-/* black gradient vignette that fades out smoothly on hover */
+/* Vignette that fades out on hover. Colour stops use explicit rgba(0,0,0,0)
+   rather than the keyword `transparent`: WebKit/Safari interpolates the keyword
+   through opaque black, which painted the whole card as a black block. A
+   circle with a px-safe radius also avoids Safari's percentage-ellipse quirks. */
 .v-thumb::after {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 72% 72% at 50% 50%,
-    transparent 28%,
-    rgba(0, 0, 0, 0.5) 66%,
-    rgba(0, 0, 0, 0.94) 100%
+    circle at 50% 50%,
+    rgba(0, 0, 0, 0) 45%,
+    rgba(0, 0, 0, 0.35) 78%,
+    rgba(0, 0, 0, 0.7) 100%
   );
   transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
@@ -1752,14 +1758,16 @@ body.is-leaving {
 #mag-grid .v-card:nth-child(7) { animation-delay: 0.47s; }
 #mag-grid .v-card:nth-child(8) { animation-delay: 0.54s; }
 
-/* Search overlay backdrop (dark, low-opacity, blurred) */
+/* Search overlay backdrop (dark, low-opacity, blurred).
+   The dark background and backdrop-filter are applied ONLY when open: Safari
+   keeps painting a backdrop-filter even while the element is visibility:hidden,
+   which showed as a black block over the home. With no background/filter while
+   closed there is nothing to paint. */
 #search-overlay {
   position: fixed;
   inset: 0;
   z-index: 2500;
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: transparent;
   opacity: 0;
   visibility: hidden;
   /* never capture clicks while closed — otherwise a stuck/animating overlay
@@ -1767,7 +1775,14 @@ body.is-leaving {
   pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-body.search-open #search-overlay { opacity: 1; visibility: visible; pointer-events: auto; }
+body.search-open #search-overlay {
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
 
 /* highlighted match inside search snippets */
 mark.search-hl {
