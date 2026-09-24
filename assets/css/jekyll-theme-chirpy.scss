@@ -1354,6 +1354,9 @@ pre,
   position: relative;
   border-radius: 16px;
   overflow: hidden;
+  /* isolate = a clean stacking context; stops WebKit/Safari from painting the
+     rounded-clip box as an opaque black rectangle over the image */
+  isolation: isolate;
   aspect-ratio: 16 / 10;
   margin-bottom: 1rem;
   border: 1px solid var(--glass-border);
@@ -1362,6 +1365,11 @@ pre,
   background: linear-gradient(135deg, #1a1a1a, #101010);
 }
 .v-thumb img {
+  /* absolutely positioned so the <img> never drives the thumb's height:
+     a height:100% child under aspect-ratio can create a circular sizing
+     dependency that collapses the card to 0px in Safari */
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
