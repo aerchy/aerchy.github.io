@@ -1341,9 +1341,13 @@ pre,
   #mag-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* opacity-only entrance so it never fights the JS tilt transform (no jump) */
-@keyframes card-in { from { opacity: 0; } to { opacity: 1; } }
-.v-card { animation: card-in 0.5s ease both; }
+/* Cards render statically — NO entrance animation. A per-card CSS animation
+   (even opacity-only) makes WebKit/Safari promote each card to its own
+   compositing layer, and on first paint of the home page Safari failed to
+   paint those layers: only the z-indexed OS badge survived, leaving the whole
+   grid as a black block you could still click through. Painting the cards as
+   plain, non-composited grid items is reliable in every browser. */
+.v-card { opacity: 1; }
 .v-link { display: block; }
 
 .v-thumb {
@@ -1738,25 +1742,20 @@ body.is-leaving {
   transition: opacity 0.24s ease;
 }
 
-/* 1b) Post cards entrance — a smooth, minimal staggered reveal on page load.
-   Uses animation-fill-mode: backwards so the offset only applies during the
-   delay; after it finishes the card keeps NO transform, leaving the JS tilt
-   free (no conflict / no blur). */
-@keyframes card-reveal {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* 1b) Post cards render statically — NO staggered entrance.
+   The previous reveal animated `transform: translateY()` with a `backwards`
+   fill, which promoted every card to its own WebKit/Safari compositing layer.
+   On the home page's FIRST paint Safari failed to paint those layers, so the
+   whole grid showed as a black block you could still click through — only the
+   z-indexed OS badge (its own layer) survived. (Under prefers-reduced-motion
+   the cards were already forced static for the same reason.) Painting the
+   cards as plain grid items with no transform/animation is reliable in every
+   browser. */
 #mag-grid .v-card {
-  animation: card-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation: none;
+  opacity: 1;
+  transform: none;
 }
-#mag-grid .v-card:nth-child(1) { animation-delay: 0.05s; }
-#mag-grid .v-card:nth-child(2) { animation-delay: 0.12s; }
-#mag-grid .v-card:nth-child(3) { animation-delay: 0.19s; }
-#mag-grid .v-card:nth-child(4) { animation-delay: 0.26s; }
-#mag-grid .v-card:nth-child(5) { animation-delay: 0.33s; }
-#mag-grid .v-card:nth-child(6) { animation-delay: 0.40s; }
-#mag-grid .v-card:nth-child(7) { animation-delay: 0.47s; }
-#mag-grid .v-card:nth-child(8) { animation-delay: 0.54s; }
 
 /* Search overlay backdrop (dark, low-opacity, blurred).
    The dark background and backdrop-filter are applied ONLY when open: Safari
