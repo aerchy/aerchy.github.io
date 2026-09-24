@@ -96,7 +96,10 @@ refactor: true
       <a href="{{ post.url | relative_url }}" class="v-link">
         {% if src != '' %}
           <div class="v-thumb">
-            <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}">
+            <!-- eager + async so the home covers paint immediately: Chirpy
+                 otherwise injects loading="lazy", and heavy lazy covers stayed
+                 black in Safari until a scroll/resize triggered the load -->
+            <img src="{{ src }}" alt="{{ post.image.alt | default: machine_name }}" loading="eager" decoding="async" fetchpriority="{% if forloop.index <= 4 %}high{% else %}auto{% endif %}">
             {% if os != '' %}<span class="v-cat os-{{ os_slug }}">{{ os }}</span>{% endif %}
             {% if post.pin %}<span class="v-pin">Pinned</span>{% endif %}
           </div>

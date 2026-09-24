@@ -1377,6 +1377,26 @@ pre,
 }
 .v-card:hover .v-thumb img { transform: scale(1.05); }
 
+/* Chirpy's refactor-content wraps every home cover in
+   <div class="preview-img shimmer"> (its LQIP/shimmer placeholder). That
+   animated placeholder is what painted the card as a black/animated block in
+   Safari before the heavy cover finished loading. Neutralise it inside our
+   cards: the wrapper becomes a no-op pass-through and the <img> (absolutely
+   positioned above) fills the thumb directly. */
+.v-thumb .preview-img {
+  position: static;
+  overflow: visible;
+  background: none !important;
+  animation: none !important;
+  height: 100%;
+}
+.v-thumb .preview-img::before,
+.v-thumb .preview-img::after {
+  display: none !important;
+  content: none !important;
+  animation: none !important;
+}
+
 /* Vignette that fades out on hover. Colour stops use explicit rgba(0,0,0,0)
    rather than the keyword `transparent`: WebKit/Safari interpolates the keyword
    through opaque black, which painted the whole card as a black block. A
