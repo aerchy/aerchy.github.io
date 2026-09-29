@@ -2,7 +2,7 @@
 title: "HTB - TombWatcher (Hard | Windows | Active Directory)"
 date: 2026-09-13 00:00:00 +0000
 categories: [HackTheBox, Active Directory]
-tags: [htb, windows, active-directory, ad-recycle-bin, addself, bloodhound, bloodyad, certipy, esc15, esc3, forcechangepassword, genericall, kerberoasting, readgmsapassword, targeted-kerberoasting, upn, writeowner, writespn]
+tags: [htb, windows, active-directory, ad-recycle-bin, addself, bloodhound, bloodyad, certipy, esc15, esc3, forcechangepassword, genericall, kerberoasting, readgmsapassword, targeted-kerberoasting, upn, writeowner, writespn, getuserspns]
 description: "Active Directory ACL abuse & AD Recycle Bin to ADCS ESC15 for Domain Admin"
 image:
   path: /assets/img/tombwatcher.png
