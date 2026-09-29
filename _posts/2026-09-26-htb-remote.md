@@ -2,7 +2,7 @@
 title: "HTB - Remote (Easy | Windows | Web)"
 date: 2026-09-26 12:00:00 +0000
 categories: [HackTheBox, Web]
-tags: [htb, windows, teamviewer, gobuster, nfs, umbraco, john, metasploit, cve-2019-18988, psexec]
+tags: [htb, windows, teamviewer, gobuster, nfs, umbraco, john, metasploit, cve-2019-18988, psexec, powershell-rce]
 description: "An open NFS share leaks the Umbraco.sdf DB with an admin hash (cracked with John), authenticated Umbraco RCE via Metasploit, then TeamViewer stored creds (CVE-2019-18988) reused with PsExec for SYSTEM"
 image:
   path: /assets/img/remote.png
