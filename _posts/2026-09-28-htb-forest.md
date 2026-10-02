@@ -176,8 +176,6 @@ A PowerShell session is established as svc-alfresco. The user flag can now be re
 
 ## **Root**
 
-## **Root**
-
 BloodHound reveals that the **Exchange Windows Permissions** group has WriteDACL over the domain `htb.local`:
 
 ![](/assets/img/forest/Pasted_image_20260930182923.png)
