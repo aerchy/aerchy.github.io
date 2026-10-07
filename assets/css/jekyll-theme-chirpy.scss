@@ -1892,15 +1892,6 @@ mark.search-jump {
   background-size: 100% 1px;
 }
 
-/* 6a) TOC shows ONLY the top-level sections (Recon / User / Root).
-   tocbot renders nested <ol class="toc-list"> for h3/h4; hide every nested
-   level so the sidebar index lists only the H2 sections (no subsections, no
-   "Summary"). Applies to the sticky sidebar TOC and the mobile popup. */
-#toc .toc-list .toc-list,
-#toc-popup-content .toc-list .toc-list {
-  display: none !important;
-}
-
 /* 6) TOC: stronger, smoother active-section indicator */
 #toc .toc-link {
   position: relative;

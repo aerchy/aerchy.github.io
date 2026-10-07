@@ -207,6 +207,36 @@
   })();
 
   /* ---------------------------------------------------------------------
+     4b) Strip the "Summary" entry from the TOC — keep every real subsection
+         (BloodHound Enumeration, Lateral Movement, …) but never list the
+         closing Summary / Attack Chain Summary in the right-hand index.
+     --------------------------------------------------------------------- */
+  (function tocDropSummary() {
+    var RX = /^\s*(attack\s+chain\s+)?summary\s*$/i;
+    function strip(root) {
+      if (!root) return;
+      var links = root.querySelectorAll('a.toc-link');
+      for (var i = 0; i < links.length; i++) {
+        if (RX.test(links[i].textContent || '')) {
+          var li = links[i].closest('li');
+          if (li) li.parentNode.removeChild(li);
+        }
+      }
+    }
+    function run() {
+      strip(document.getElementById('toc'));
+      strip(document.getElementById('toc-popup-content'));
+    }
+    var toc = document.getElementById('toc');
+    // tocbot builds the list asynchronously after load — watch for it, then run
+    if (toc) new MutationObserver(run).observe(toc, { childList: true, subtree: true });
+    if (document.readyState === 'complete') run();
+    else window.addEventListener('load', run);
+    window.setTimeout(run, 300);
+    window.setTimeout(run, 1200);
+  })();
+
+  /* ---------------------------------------------------------------------
      5) TOC click — scroll so the heading lands BELOW the fixed top bar
         (overrides tocbot's offset, which assumed a shorter bar)
      --------------------------------------------------------------------- */
