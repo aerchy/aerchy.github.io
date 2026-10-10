@@ -1,5 +1,5 @@
 ---
-title: "HTB - Pressed (Medium | Linux | Web)"
+title: "HTB - Pressed (Hard | Linux | Web)"
 date: 2026-10-06 12:00:00 +0000
 categories: [HackTheBox, Web]
 tags: [htb, linux, wordpress, wpscan, xml-rpc, php-everywhere, webshell, cve-2021-4034, pwnkit]
